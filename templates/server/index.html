@@ -2,5 +2,73 @@
 
 {% block title %}My App{% endblock %}
 {% block content %}
-    Just some example content
+    <div id="main" style="width: 600px;height:400px;"></div>
 {% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main'));
+        var test = 10;
+
+
+            // 基于准备好的dom，初始化echarts图表
+            var option = {
+                tooltip: {
+                    show: true
+                },
+                animation: false,
+                legend: {
+                    data: ['销量']
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        "name": "销量",
+                        "type": "bar",
+                        "data": [5, 20, 40, 10, 10, 20]
+                    }
+                ]
+            };
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+
+
+    //这里用setTimeout代替ajax请求进行演示
+    window.setInterval(function () {
+        var data = [test, 5, 10, 40, 20, 10];
+        $.get("{% url 'server:fake_bar' %}", function(responseTxt, statusTxt, xhr)
+         {
+            test = responseTxt;
+            console.log(statusTxt);
+            //if (statusTxt == "success")alert(test);
+            if (statusTxt == "error")
+                alert("Error: " + xhr.status + ": " + xhr.statusText);
+         });
+        data = [test, 5, 10, 40, 20, 10];
+        refreshData(data);
+    },5000);
+
+    function refreshData(data){
+         if(!myChart){
+              return;
+         }
+
+         //更新数据
+          var option = myChart.getOption();
+          option.series[0].data = data;
+          myChart.setOption(option);
+    }
+    </script>
+{% endblock javascript %}
