@@ -1,7 +1,7 @@
 import random
 import numpy as np
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, Http404
 from django.views.generic import ListView, DeleteView
 from pure_pagination.mixins import PaginationMixin
 
@@ -19,6 +19,22 @@ class ServerListView(PaginationMixin, ListView):
 
     paginate_by = 5
     object = Host
+
+    def get(self, request, *args, **kwargs):
+        request = self.request
+        try:
+            return super().get(request, *args, **kwargs)
+        except Http404:
+            if request.GET.get('page', 1) == 1:
+                raise
+            
+        _page = request.GET.copy()
+        del _page['page']
+        params = _page.urlencode()
+        if params:
+            return redirect('%s?%s' % (request.path, params))
+        else:
+            return redirect('%s' % request.path)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super().get_context_data(object_list=None, **kwargs)
