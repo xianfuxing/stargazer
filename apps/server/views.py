@@ -27,7 +27,7 @@ class ServerListView(PaginationMixin, ListView):
         except Http404:
             if request.GET.get('page', 1) == 1:
                 raise
-            
+
         _page = request.GET.copy()
         del _page['page']
         params = _page.urlencode()

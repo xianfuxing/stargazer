@@ -1,5 +1,8 @@
-{% extends 'adminlte/base.html' %}
+{% extends '_base.html' %}
 
+{% block title %}
+    服务器列表
+{% endblock title %}
 {% block content %}
     <table class="table">
     <thead>
@@ -16,7 +19,7 @@
                 <td>{{ host.hostname }}</td>
                 <td>{{ host.ip }}</td>
                 <td>{{ host.get_org_display }}</td>
-                <td>{{ host.status }}</td>
+                <td>{{ host.get_status_display }}</td>
             </tr>
         {% endfor %}
     </tbody>

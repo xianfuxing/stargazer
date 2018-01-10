@@ -23,7 +23,7 @@ class Host(models.Model):
     hardware = models.CharField(max_length=200, default='', blank=True, verbose_name='硬件配置')
     provider = models.CharField(default='阿里云', max_length=50, verbose_name='服务商')
     platform = models.CharField(default='Linux', max_length=50, verbose_name='平台')
-    status = models.CharField(default='running', max_length=10, verbose_name='运行状态')
+    status = models.CharField(default='running', max_length=10, choices=STATUS_CHOICES, verbose_name='运行状态')
     create_time = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 

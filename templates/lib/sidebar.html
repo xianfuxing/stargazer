@@ -1,0 +1,26 @@
+{% extends 'adminlte/lib/_main_sidebar.html' %}
+
+{% block nav_heading %}大盘导航{% endblock %}
+
+{% block nav_links %}
+    <li>
+        <a href="#">
+            <i class="fa fa-dashboard"></i> <span>监控大盘</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-server"></i> <span>服务器列表</span>
+            <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+        </a>
+        <ul class="treeview-menu">
+            <li>
+                <a href="#">
+                    <i class="fa fa-line-chart"></i> 监控列表
+                </a>
+            </li>
+        </ul>
+    </li>
+{% endblock nav_links %}
