@@ -1,0 +1,7 @@
+{% extends 'adminlte/lib/_styles.html' %}
+{% load staticfiles %}
+
+{% block styles %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
+{% endblock %}

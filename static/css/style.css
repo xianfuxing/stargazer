@@ -1,0 +1,21 @@
+body {
+    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+}
+
+
+/* start table styles */
+.table {
+    border-top: 3px solid #d2d6de;
+    background-color: #ffffff;
+}
+
+.table tbody tr td,
+.table thead tr th {
+    border-bottom: 1px solid #eee;
+}
+
+.table thead tr th {
+    color: #666;
+}
+
+/* end table styles */
