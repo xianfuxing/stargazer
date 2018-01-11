@@ -16,6 +16,10 @@ class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
 
+class ServerOverviewView(TemplateView):
+    template_name = 'server/overview.html'
+
+
 class ServerListView(PaginationMixin, ListView):
     model = Host
     context_object_name = 'hosts'

@@ -4,29 +4,33 @@
 {% block nav_heading %}大盘导航{% endblock %}
 
 {% block nav_links %}
-    <li class="{% is_active_reverse request '' 'server:dashboard' %}">
-        <a href="{% url 'server:dashboard' %}">
-            <i class="fa fa-dashboard"></i> <span>监控大盘</span>
+    <li class="{% is_active_reverse request '' 'dashboard' %}">
+        <a href="{% url 'dashboard' %}">
+            <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+            <span class="pull-right-container">
+                <small class="label pull-right bg-yellow">{% get_not_running %}</small>
+            </span>
         </a>
     </li>
     <li class="treeview">
         <a href="{% url 'server:list' %}">
-            <i class="fa fa-server"></i> <span>服务器</span>
+            <i class="fa fa-server"></i> <span>ECS</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-            <li class="{% is_active_reverse request '' 'server:list' %}">
-                <a href="{% url 'server:list' %}">
-                    <i class="fa fa-line-chart"></i> 实例列表
+            <li class="{% is_active_reverse request '' 'server:overview' %}">
+                <a href="{% url 'server:overview' %}">
+                    <i class="fa fa-cube"></i> 概述
                 </a>
             </li>
-            <li class="{% is_active_reverse request '' 'server:fake_bar' %}">
-                <a href="{% url 'server:fake_bar' %}">
-                    <i class="fa fa-line-chart"></i> 服务列表
+            <li class="{% is_active_reverse request '' 'server:list' %}">
+                <a href="{% url 'server:list' %}">
+                    <i class="fa fa-list-alt"></i> 实例
                 </a>
             </li>
         </ul>
     </li>
+
 {% endblock nav_links %}

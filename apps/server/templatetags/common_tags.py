@@ -1,4 +1,7 @@
 from django import template
+from django.db.models import Q
+
+from server.models import Host
 
 try:
     # Django 2.0 or later
@@ -57,3 +60,9 @@ def is_active_reverse(request, args, *urlnames):
                 return ''
             return 'active'
         return ''
+
+
+@register.simple_tag()
+def get_not_running():
+    not_running_count = Host.objects.filter(~Q(status='running')).count()
+    return not_running_count
