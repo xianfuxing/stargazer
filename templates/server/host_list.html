@@ -17,7 +17,7 @@
     <tbody>
         {% for host in hosts %}
             <tr>
-                <td>{{ host.hostname }}</td>
+                <td class="hostname"><a href="{% url 'server:detail' host.id %}">{{ host.hostname }}</a></td>
                 <td>{{ host.ip }}</td>
                 <td>{{ host.get_org_display }}</td>
                 <td class="{% get_server_alert_status host.id %}">{{ host.get_status_display }}</td>

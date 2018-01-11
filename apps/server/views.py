@@ -2,7 +2,7 @@ import random
 import numpy as np
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from django.views.generic import ListView, DeleteView
+from django.views.generic import TemplateView, ListView, DeleteView
 from pure_pagination.mixins import PaginationMixin
 
 from .models import Host
@@ -10,6 +10,10 @@ from .models import Host
 
 def index(request):
     return render(request, 'server/index.html')
+
+
+class DashboardView(TemplateView):
+    template_name = 'server/dashboard.html'
 
 
 class ServerListView(PaginationMixin, ListView):
@@ -40,6 +44,17 @@ class ServerListView(PaginationMixin, ListView):
         ctx = super().get_context_data(object_list=None, **kwargs)
         host_count = Host.objects.all().count()
         ctx['host_count'] = host_count
+
+        return ctx
+
+
+class ServerDetailView(DeleteView):
+    pk_url_kwarg = 'host_id'
+    model = Host
+    template_name = 'server/host_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
 
         return ctx
 

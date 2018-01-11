@@ -20,6 +20,7 @@ class Host(models.Model):
     ip = models.GenericIPAddressField(verbose_name='ip地址')
     desc = models.CharField(max_length=200, default='', verbose_name='描述')
     org = models.CharField(max_length=5, choices=ORG_CHOICES, verbose_name='所在组织')
+    region = models.CharField(max_length=10, default='华南', verbose_name='所在可用区')
     hardware = models.CharField(max_length=200, default='', blank=True, verbose_name='硬件配置')
     provider = models.CharField(default='阿里云', max_length=50, verbose_name='服务商')
     platform = models.CharField(default='Linux', max_length=50, verbose_name='平台')
