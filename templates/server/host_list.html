@@ -1,4 +1,5 @@
 {% extends 'server_base.html' %}
+{% load common_tags %}
 
 {% block title %}
     服务器列表
@@ -19,7 +20,7 @@
                 <td>{{ host.hostname }}</td>
                 <td>{{ host.ip }}</td>
                 <td>{{ host.get_org_display }}</td>
-                <td>{{ host.get_status_display }}</td>
+                <td class="{% get_server_alert_status host.id %}">{{ host.get_status_display }}</td>
             </tr>
         {% endfor %}
     </tbody>

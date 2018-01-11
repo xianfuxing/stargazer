@@ -1,5 +1,5 @@
 body {
-    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+    font-family: "Helvetica Neue", "Luxi Sans", "DejaVu Sans", Tahoma, "Hiragino Sans GB", STHeiti, "Microsoft YaHei";
 }
 
 
@@ -7,6 +7,7 @@ body {
 .table {
     border-top: 3px solid #d2d6de;
     background-color: #ffffff;
+    font-size: 0.8em;
 }
 
 .table tbody tr td,
@@ -16,6 +17,22 @@ body {
 
 .table thead tr th {
     color: #666;
+}
+
+.pagination {
+    float: right;
+}
+
+.table tbody td.run-status-running {
+    color: #090;
+}
+
+.table tbody td.run-status-stopped {
+    color: #f90;
+}
+
+.table tbody td.run-status-retired {
+    color: #f00;
 }
 
 /* end table styles */
