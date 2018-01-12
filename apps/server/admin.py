@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Host, Service
+from .models import Host, Service, Org
 # Register your models here.
 
 
@@ -17,5 +17,12 @@ class ServiceAdmin(admin.ModelAdmin):
     ordering = ['name']
 
 
+class OrgAdmin(admin.ModelAdmin):
+    list_display = ('name', 'code')
+    list_filter = ('name', 'code')
+    ordering = ['name']
+
+
 admin.site.register(Host, HostAdmin)
 admin.site.register(Service, ServiceAdmin)
+admin.site.register(Org, OrgAdmin)

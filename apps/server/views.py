@@ -5,7 +5,7 @@ from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, ListView, DeleteView
 from pure_pagination.mixins import PaginationMixin
 
-from .models import Host
+from .models import Host, Org
 
 
 def index(request):
@@ -16,7 +16,9 @@ class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
 
-class ServerOverviewView(TemplateView):
+class ServerOverviewView(ListView):
+    model = Org
+    pk_url_kwarg = 'org_list'
     template_name = 'server/overview.html'
 
 
@@ -43,6 +45,9 @@ class ServerListView(PaginationMixin, ListView):
             return redirect('%s?%s' % (request.path, params))
         else:
             return redirect('%s' % request.path)
+
+    def get_queryset(self):
+        return super().get_queryset()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super().get_context_data(object_list=None, **kwargs)

@@ -1,5 +1,40 @@
 {% extends 'server_base.html' %}
 
+{% block title %}
+    ECS概述
+{% endblock title %}
+
 {% block content %}
-    综述
+    <div class="col-md-6">
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title">ECS Instances Overview</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        <th style="width: 10px">#</th>
+                        <th>组织</th>
+                        <th>运行中</th>
+                        <th>已停止</th>
+                    </tr>
+                    {% for org in org_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}.</td>
+                            <td>{{ org.name }}</td>
+                            <td><span class="badge bg-green">{{ org.get_running_count }}</span></td>
+                            <td><span class="badge bg-yellow">{{ org.get_stopped_count }}</span></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+            </div>
+        </div>
+        <!-- /.box -->
+    </div>
 {% endblock content %}
