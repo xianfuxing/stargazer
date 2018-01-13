@@ -21,6 +21,12 @@ class ServerOverviewView(ListView):
     pk_url_kwarg = 'org_list'
     template_name = 'server/overview.html'
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(object_list=None, **kwargs)
+        ctx['host_count'] = Host.objects.all().count()
+        ctx['is_stopped'] = Host.objects.filter(status='stopped').count()
+        return ctx
+
 
 class ServerListView(PaginationMixin, ListView):
     model = Host
@@ -49,10 +55,13 @@ class ServerListView(PaginationMixin, ListView):
     def get_queryset(self):
         query_set = super().get_queryset()
         status = self.request.GET.get('status', '')
+        org = self.request.GET.get('org', '')
+        if org:
+            query_set = query_set.filter(org=org)
+
         if status == 'stopped' or status == 'retired':
             query_set = query_set.filter(status=status)
-        else:
-            return query_set
+
         return query_set
 
     def get_context_data(self, *, object_list=None, **kwargs):

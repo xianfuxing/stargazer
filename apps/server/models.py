@@ -22,6 +22,9 @@ class Org(models.Model):
     def get_retired_count(self):
         return self.host_set.filter(status='retired').count()
 
+    def get_all_count(self):
+        return self.host_set.all().count()
+
     def __str__(self):
         return self.name
 
