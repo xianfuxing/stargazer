@@ -29,6 +29,19 @@ class Org(models.Model):
         return self.name
 
 
+class HostHardware(models.Model):
+    version = models.CharField(max_length=30, verbose_name='实例规格')
+    cpu = models.IntegerField(verbose_name='处理器')
+    memory = models.IntegerField(verbose_name='内存')
+
+    class Meta:
+        verbose_name = '配置'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.version
+
+
 class Host(models.Model):
     STATUS_CHOICES = (
         ('running', '运行中'),
@@ -40,7 +53,8 @@ class Host(models.Model):
     desc = models.CharField(max_length=200, default='', blank=True, verbose_name='描述')
     org = models.ForeignKey(Org, verbose_name='所在组织', on_delete='PROTECT')
     region = models.CharField(max_length=10, default='华南', verbose_name='所在可用区')
-    hardware = models.CharField(max_length=200, default='', blank=True, verbose_name='硬件配置')
+    # hardware = models.CharField(max_length=200, verbose_name='硬件配置')
+    hardware = models.ForeignKey(HostHardware, verbose_name='硬件配置', default=1, on_delete='PROTECT')
     provider = models.CharField(default='阿里云', max_length=50, verbose_name='服务商')
     platform = models.CharField(default='Linux', max_length=50, verbose_name='平台')
     status = models.CharField(default='running', max_length=10, choices=STATUS_CHOICES, verbose_name='运行状态')

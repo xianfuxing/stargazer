@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Host, Service, Org
+from .models import Host, Service, Org, HostHardware
 # Register your models here.
 
 
@@ -23,6 +23,13 @@ class OrgAdmin(admin.ModelAdmin):
     ordering = ['name']
 
 
+class HostHardwareAdmin(admin.ModelAdmin):
+    list_display = ('version', 'cpu', 'memory')
+    list_filter = ('version', 'cpu', 'memory')
+    ordering = ['version']
+
+
 admin.site.register(Host, HostAdmin)
 admin.site.register(Service, ServiceAdmin)
 admin.site.register(Org, OrgAdmin)
+admin.site.register(HostHardware, HostHardwareAdmin)

@@ -75,6 +75,7 @@ class ServerListView(PaginationMixin, ListView):
 class ServerDetailView(DeleteView):
     pk_url_kwarg = 'host_id'
     model = Host
+    context_object_name = 'host'
     template_name = 'server/host_detail.html'
 
     def get_context_data(self, **kwargs):
