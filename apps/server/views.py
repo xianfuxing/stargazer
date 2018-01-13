@@ -47,7 +47,13 @@ class ServerListView(PaginationMixin, ListView):
             return redirect('%s' % request.path)
 
     def get_queryset(self):
-        return super().get_queryset()
+        query_set = super().get_queryset()
+        status = self.request.GET.get('status', '')
+        if status == 'stopped' or status == 'retired':
+            query_set = query_set.filter(status=status)
+        else:
+            return query_set
+        return query_set
 
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super().get_context_data(object_list=None, **kwargs)

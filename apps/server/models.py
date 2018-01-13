@@ -9,6 +9,10 @@ class Org(models.Model):
     code = models.CharField(max_length=10, verbose_name='组织代码')
     desc = models.CharField(max_length=100, blank='True', verbose_name='描述')
 
+    class Meta:
+        verbose_name = '组织'
+        verbose_name_plural = verbose_name
+
     def get_running_count(self):
         return self.host_set.filter(status='running').count()
 
@@ -40,6 +44,10 @@ class Host(models.Model):
     create_time = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
 
+    class Meta:
+        verbose_name = '主机'
+        verbose_name_plural = verbose_name
+
     def __str__(self):
         return self.hostname
 
@@ -49,6 +57,10 @@ class Service(models.Model):
     name = models.CharField(max_length=50, verbose_name='服务')
     port = models.IntegerField(verbose_name='端口')
     version = models.CharField(max_length=20, verbose_name='版本')
+
+    class Meta:
+        verbose_name = '服务'
+        verbose_name_plural = verbose_name
 
     def __str__(self):
         return self.name

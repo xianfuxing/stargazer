@@ -25,7 +25,11 @@
                             <td>{{ forloop.counter }}.</td>
                             <td>{{ org.name }}</td>
                             <td><span class="badge bg-green">{{ org.get_running_count }}</span></td>
-                            <td><span class="badge bg-yellow">{{ org.get_stopped_count }}</span></td>
+                            {% if org.get_stopped_count > 0 %}
+                                <td><a href="{% url 'server:list' %}?status=stopped"><span class="badge bg-yellow">{{ org.get_stopped_count }}</span></a></td>
+                            {% else %}
+                                <td><span class="badge bg-yellow">{{ org.get_stopped_count }}</span></td>
+                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
