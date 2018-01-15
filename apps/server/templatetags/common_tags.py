@@ -47,6 +47,8 @@ def is_active_reverse(request, args, *urlnames):
     :param urlnames:
     :return: str
     """
+    root_urls = [reverse('server:list'), '/']
+    detail_base = reverse('server:detail', args=[0]).split('0')[0]
     for urlname in urlnames:
         if args:
             args = [args]
@@ -54,10 +56,13 @@ def is_active_reverse(request, args, *urlnames):
             args =[]
         url = reverse(urlname, args=args)
         if url in request.path:
-            if url == '/' and request.path == '/':
+            if url == reverse('server:list') and request.path.startswith(detail_base):
                 return 'active'
-            elif url == '/' and request.path != '/':
-                return ''
+            for r_url in root_urls:
+                if url == r_url and r_url == request.path:
+                    return 'active'
+                elif url == r_url and r_url != request.path:
+                    return ''
             return 'active'
         return ''
 
