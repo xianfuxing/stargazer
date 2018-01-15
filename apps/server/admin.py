@@ -24,8 +24,8 @@ class OrgAdmin(admin.ModelAdmin):
 
 
 class HostHardwareAdmin(admin.ModelAdmin):
-    list_display = ('version', 'cpu', 'memory')
-    list_filter = ('version', 'cpu', 'memory')
+    list_display = ('version', 'specific', 'cpu', 'memory')
+    list_filter = ('version', 'specific', 'cpu', 'memory')
     ordering = ['version']
 
 

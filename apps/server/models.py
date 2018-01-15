@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.core.validators import MinValueValidator, ValidationError
 
 # Create your models here.
 
@@ -30,9 +31,10 @@ class Org(models.Model):
 
 
 class HostHardware(models.Model):
-    version = models.CharField(max_length=30, verbose_name='实例规格')
-    cpu = models.IntegerField(verbose_name='处理器')
-    memory = models.IntegerField(verbose_name='内存')
+    version = models.CharField(max_length=30, unique=True, verbose_name='实例规格')
+    specific = models.CharField(max_length=20, verbose_name='规格族')
+    cpu = models.PositiveIntegerField(verbose_name='处理器', validators=[MinValueValidator(1, message='最小为1')])
+    memory = models.PositiveIntegerField(verbose_name='内存', validators=[MinValueValidator(1, message='最小为1')])
 
     class Meta:
         verbose_name = '配置'
