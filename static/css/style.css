@@ -3,7 +3,7 @@ body {
 }
 
 
-/* start table styles */
+/* start server list table styles */
 .table {
     border-top: 3px solid #d2d6de;
     background-color: #ffffff;
@@ -39,4 +39,4 @@ body {
     font-weight: 600;
 }
 
-/* end table styles */
+/* end server list table styles */

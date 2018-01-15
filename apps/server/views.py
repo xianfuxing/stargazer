@@ -8,10 +8,6 @@ from pure_pagination.mixins import PaginationMixin
 from .models import Host, Org
 
 
-def index(request):
-    return render(request, 'server/index.html')
-
-
 class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
@@ -82,6 +78,10 @@ class ServerDetailView(DeleteView):
         ctx = super().get_context_data(**kwargs)
 
         return ctx
+
+
+def index(request):
+    return render(request, 'server/index.html')
 
 
 def fake_bar(request):

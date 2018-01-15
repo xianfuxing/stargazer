@@ -1,9 +1,96 @@
 {% extends 'server_base.html' %}
 
 {% block title %}
-    服务器详情
+    实例详情
 {% endblock title %}
 
-{% block content %}
+{% block content_header %}
+    <section class="content-header">
+        <h1>{{ host.hostname }}
+            <small>实例详情</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="{% url 'server:list' %}"><i class="fa fa-dashboard"></i> 实例列表</a></li>
+            <li class="active">{{ host.hostname }}</li>
+        </ol>
+    </section>
+{% endblock content_header %}
 
+{% block page_description %}
+    实例详情
+{% endblock page_description %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="box box-info box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">基本信息</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><span>名称：</span>{{ host.hostname }}</td>
+                        </tr>
+                        <tr>
+                            <td><span>地区：</span>{{ host.region }}</td>
+                        </tr>
+                        <tr>
+                            <td><span>组织：</span>{{ host.org.name }}</td>
+                        </tr>
+                        <tr>
+                            <td><span>实例规格：</span>{{ host.hardware.version }}</td>
+                        </tr>
+                        <tr>
+                            <td><span>实例规格族：</span>{{ host.hardware.specific }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="box box-info box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">配置信息</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><span>CPU：</span>{{ host.hardware.cpu }}核</td>
+                        </tr>
+                        <tr>
+                            <td><span>内存：</span>{{ host.hardware.memory }} GB</td>
+                        </tr>
+                        <tr>
+                            <td><span>IP：</span>{{ host.ip }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+    </div>
 {% endblock content %}
