@@ -95,7 +95,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <div class="box box-info box-solid">
+            <div class="box box-warning box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title">付费信息</h3>
 
@@ -117,7 +117,7 @@
                             <td><span class="text-muted">到期时间：</span>{{ host.expiration_date }}</td>
                         </tr>
                         <tr>
-                            <td><span class="text-muted">费用：</span>{{ host.price }} 元</td>
+                            <td><span class="text-muted">费用：</span><span class="price">￥{{ host.price }}</span></td>
                         </tr>
                         </tbody>
                     </table>
