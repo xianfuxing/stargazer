@@ -39,19 +39,19 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td><span>名称：</span>{{ host.hostname }}</td>
+                            <td><span class="text-muted">名称：</span>{{ host.hostname }}</td>
                         </tr>
                         <tr>
-                            <td><span>地区：</span>{{ host.region }}</td>
+                            <td><span class="text-muted">地区：</span>{{ host.region }}</td>
                         </tr>
                         <tr>
-                            <td><span>组织：</span>{{ host.org.name }}</td>
+                            <td><span class="text-muted">组织：</span>{{ host.org.name }}</td>
                         </tr>
                         <tr>
-                            <td><span>实例规格：</span>{{ host.hardware.version }}</td>
+                            <td><span class="text-muted">实例规格：</span>{{ host.hardware.version }}</td>
                         </tr>
                         <tr>
-                            <td><span>实例规格族：</span>{{ host.hardware.specific }}</td>
+                            <td><span class="text-muted">实例规格族：</span>{{ host.hardware.specific }}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -78,13 +78,46 @@
                     <table>
                         <tbody>
                         <tr>
-                            <td><span>CPU：</span>{{ host.hardware.cpu }}核</td>
+                            <td><span class="text-muted">CPU：</span>{{ host.hardware.cpu }}核</td>
                         </tr>
                         <tr>
-                            <td><span>内存：</span>{{ host.hardware.memory }} GB</td>
+                            <td><span class="text-muted">内存：</span>{{ host.hardware.memory }} GB</td>
                         </tr>
                         <tr>
-                            <td><span>IP：</span>{{ host.ip }}</td>
+                            <td><span class="text-muted">IP：</span>{{ host.ip }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="box box-info box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">付费信息</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td><span class="text-muted">付款方式：</span>{{ host.get_pay_method_display }}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="text-muted">到期时间：</span>{{ host.expiration_date }}</td>
+                        </tr>
+                        <tr>
+                            <td><span class="text-muted">费用：</span>{{ host.price }} 元</td>
                         </tr>
                         </tbody>
                     </table>

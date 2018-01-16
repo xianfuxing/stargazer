@@ -5,10 +5,10 @@ from .models import Host, Service, Org, HostHardware
 
 class HostAdmin(admin.ModelAdmin):
     list_display = ('hostname', 'ip', 'org',
-                    'provider', 'platform', 'create_time')
-    list_filter = ('hostname', 'ip', 'provider', 'platform', 'create_time')
-    date_hierarchy = 'create_time'
-    ordering = ['hostname', 'create_time']
+                    'provider', 'platform', 'price', 'expiration_date')
+    list_filter = ('hostname', 'ip', 'provider', 'platform', 'expiration_date')
+    date_hierarchy = 'expiration_date'
+    ordering = ['hostname', 'expiration_date']
 
 
 class ServiceAdmin(admin.ModelAdmin):

@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, ValidationError
@@ -50,15 +51,22 @@ class Host(models.Model):
         ('stopped', '已停止'),
         ('retired', '已退役'),
     )
+
+    PAY_CHOICES = (
+        ('reserved', '包年包月'),
+        ('on_demand', '按量付费')
+    )
     hostname = models.CharField(max_length=50, verbose_name='主机名')
     ip = models.GenericIPAddressField(verbose_name='ip地址')
     desc = models.CharField(max_length=200, default='', blank=True, verbose_name='描述')
     org = models.ForeignKey(Org, verbose_name='所在组织', on_delete='PROTECT')
     region = models.CharField(max_length=10, default='华南', verbose_name='所在可用区')
-    # hardware = models.CharField(max_length=200, verbose_name='硬件配置')
     hardware = models.ForeignKey(HostHardware, verbose_name='硬件配置', default=1, on_delete='PROTECT')
     provider = models.CharField(default='阿里云', max_length=50, verbose_name='服务商')
     platform = models.CharField(default='Linux', max_length=50, verbose_name='平台')
+    pay_method = models.CharField(max_length=10, default='reserved', choices=PAY_CHOICES, verbose_name='付费方式')
+    expiration_date = models.DateTimeField(default=timezone.now, verbose_name='到期时间')
+    price = models.DecimalField(default=Decimal('0'), max_digits=7, decimal_places=2, verbose_name='年费')
     status = models.CharField(default='running', max_length=10, choices=STATUS_CHOICES, verbose_name='运行状态')
     create_time = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
