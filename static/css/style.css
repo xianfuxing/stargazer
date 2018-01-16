@@ -64,4 +64,9 @@ body {
 .box-body .price {
     color: #FF6600;
 }
+
+.content .non-float {
+    float: none;
+}
+
 /* end server detail page styles */

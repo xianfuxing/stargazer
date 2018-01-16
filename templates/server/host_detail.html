@@ -1,4 +1,5 @@
 {% extends 'server_base.html' %}
+{% load staticfiles %}
 
 {% block title %}
     实例详情
@@ -22,108 +23,110 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-4">
-            <div class="box box-info box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">基本信息</h3>
+        <div class="col-sm-12">
+            <div class="col-md-4">
+                <div class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">基本信息</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i>
-                        </button>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
                     </div>
-                    <!-- /.box-tools -->
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><span class="text-muted">名称：</span>{{ host.hostname }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">地区：</span>{{ host.region }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">组织：</span>{{ host.org.name }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">实例规格：</span>{{ host.hardware.version }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">实例规格族：</span>{{ host.hardware.specific }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
                 </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><span class="text-muted">名称：</span>{{ host.hostname }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">地区：</span>{{ host.region }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">组织：</span>{{ host.org.name }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">实例规格：</span>{{ host.hardware.version }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">实例规格族：</span>{{ host.hardware.specific }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">配置信息</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><span class="text-muted">CPU：</span>{{ host.hardware.cpu }}核</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">内存：</span>{{ host.hardware.memory }} GB</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">IP：</span>{{ host.ip }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
                 </div>
-                <!-- /.box-body -->
+                <div class="box box-warning box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">付费信息</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                    class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table>
+                            <tbody>
+                            <tr>
+                                <td><span class="text-muted">付款方式：</span>{{ host.get_pay_method_display }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">到期时间：</span>{{ host.expiration_date }}</td>
+                            </tr>
+                            <tr>
+                                <td><span class="text-muted">费用：</span><span class="price">￥{{ host.price }}</span></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
             </div>
+            <div class="col-md-6 col-md-push-1" id="main" style="width: 600px;height:400px;"></div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="box box-info box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">配置信息</h3>
 
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.box-tools -->
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><span class="text-muted">CPU：</span>{{ host.hardware.cpu }}核</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">内存：</span>{{ host.hardware.memory }} GB</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">IP：</span>{{ host.ip }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="box box-warning box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">付费信息</h3>
-
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.box-tools -->
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td><span class="text-muted">付款方式：</span>{{ host.get_pay_method_display }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">到期时间：</span>{{ host.expiration_date }}</td>
-                        </tr>
-                        <tr>
-                            <td><span class="text-muted">费用：</span><span class="price">￥{{ host.price }}</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
-            </div>
-        </div>
-    </div>
 {% endblock content %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
+    <script src="{% static 'js/charts.js' %}"></script>
+{% endblock javascript %}
