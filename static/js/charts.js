@@ -53,6 +53,7 @@ var option = {
         type: 'line',
         showSymbol: false,
         hoverAnimation: false,
+        smooth: true,
         data: data
     }]
 };
