@@ -128,5 +128,5 @@
 {% block javascript %}
     {{ block.super }}
     <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
-    <script src="{% static 'js/charts.js' %}"></script>
+    {% include 'lib/charts.html' %}
 {% endblock javascript %}

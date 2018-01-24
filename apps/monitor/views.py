@@ -38,11 +38,11 @@ class ItemDetailView(HostidDetailView):
         hostid = hostid_resp['hostid']
         item_resp = zapi.item.get(search={'key_': 'system.cpu.util[,{0}]'.format(item_key)},
                              hostids=hostid,
-                             output=['hostid', 'itemid', 'lastvalue'])
+                             output=['lastclock', 'itemid', 'lastvalue'])
         if item_resp:
             return item_resp[0]
         else:
-            return {'itemid': '', 'hostid': '', 'lastvalue': ''}
+            return {'itemid': '', 'lastclock': '', 'lastvalue': ''}
 
 
 class HistoryDetailView(ItemDetailView):
