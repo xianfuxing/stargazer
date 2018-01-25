@@ -1,95 +1,93 @@
 <script>
     var myChart = echarts.init(document.getElementById('main'));
 
-{#    var data = [#}
-{#    {name:'2017/12/18 6:38:08', value:['2017/12/18 6:38:08', 80]},#}
-{#    {name:'2017/12/18 16:18:18', value:['2017/12/18 16:18:18', 60]},#}
-{#    {name:'2017/12/18 19:18:18', value:['2017/12/18 19:18:18', 90]}#}
-{#    ];#}
     var history_data;
     var data;
-    function getHistoryData() {
+    function getHistoryData(callback) {
         $.ajax({
             url: "{% url 'monitor:history' host.hostname 'idle' %}",
             type: 'get',
             dataType: 'json',
-            async: false,
-            success: function(data) {
-                if (data.data) {
-                    history_data = data.data;
+            async: true,
+            success: function(_data) {
+                if (_data.data) {
+                    history_data = _data.data;
+                    data = history_data;
+                    callback(history_data)
                 } else {
                     alert('Error: history is not found');
                 }
             }
         });
-        data = history_data;
-        return history_data
+        //return history_data
     }
-
-    var option = {
-        title: {
-            text: 'CPU使用率'
-        },
-        tooltip: {
-            trigger: 'axis',
-            formatter: function (params) {
-                params = params[0];
-                var date = new Date(params.name);
-                return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '  ' + params.value[1];
+    getHistoryData(function () {
+        var option = {
+            title: {
+                text: 'CPU使用率'
             },
-            axisPointer: {
-                animation: false
-            }
-        },
-        xAxis: {
-            type: 'time',
-            splitLine: {
-                show: false
-            }
-        },
-        yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%'],
-            splitLine: {
-                show: false
-            }
-        },
-        series: [{
-            name: '模拟数据',
-            type: 'line',
-            showSymbol: false,
-            hoverAnimation: false,
-            smooth: true,
-            data: getHistoryData()
-        }]
-    };
-    myChart.setOption(option);
-
-    setInterval(function () {
-         $.get("{% url 'monitor:item' host.hostname 'idle' %}", function(responseTxt, statusTxt, xhr)
-             {
-                value = responseTxt.lastvalue;
-                date = new Date(parseInt(responseTxt.lastclock) * 1000);
-                console.log(date.getHours()+' '+ date.getMinutes());
-                //if (statusTxt == "success")alert(test);
-                data.shift();
-                data.push({
-                    name: date.toString(),
-                    value: [
-                        [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/') + ' ' +
-                        [date.getHours(), date.getMinutes(), date.getSeconds()].join(':'),
-                        (100 - value).toFixed(2)
-                    ]
-                });
-                if (statusTxt == "error")
-                    alert("Error: " + xhr.status + ": " + xhr.statusText);
-             });
-
-        //更新数据
-        myChart.setOption({
+            tooltip: {
+                trigger: 'axis',
+                formatter: function (params) {
+                    params = params[0];
+                    var date = new Date(params.name);
+                    return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds() + '  ' + params.value[1];
+                },
+                axisPointer: {
+                    animation: false
+                }
+            },
+            xAxis: {
+                type: 'time',
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%'],
+                splitLine: {
+                    show: false
+                }
+            },
             series: [{
-                data: data
+                name: '模拟数据',
+                type: 'line',
+                showSymbol: false,
+                hoverAnimation: false,
+                smooth: true,
+                data: history_data
             }]
-        });
-    }, 60000);
+        };
+        myChart.setOption(option);
+
+        setInterval(function () {
+             $.get("{% url 'monitor:item' host.hostname 'idle' %}", function(responseTxt, statusTxt, xhr)
+                 {
+                    value = responseTxt.lastvalue;
+                    date = new Date(parseInt(responseTxt.lastclock) * 1000);
+                    console.log(date.getHours()+' '+ date.getMinutes());
+                    //if (statusTxt == "success")alert(test);
+                    data.shift();
+                    data.push({
+                        name: date.toString(),
+                        value: [
+                            [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/') + ' ' +
+                            [date.getHours(), date.getMinutes(), date.getSeconds()].join(':'),
+                            (100 - value).toFixed(2)
+                        ]
+                    });
+                    if (statusTxt == "error")
+                        alert("Error: " + xhr.status + ": " + xhr.statusText);
+                 });
+
+            //更新数据
+            myChart.setOption({
+                series: [{
+                    data: data
+                }]
+            });
+        }, 60000);
+    })
+
 </script>
