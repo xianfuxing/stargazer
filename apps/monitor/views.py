@@ -53,17 +53,31 @@ class HistoryDetailView(ItemDetailView):
 
         itemid = item_resp['itemid']
         zapi = self.get_zapi()
+
+        end = datetime.datetime.now()
+        start = end - datetime.timedelta(0,3600)
+
+        # to timestamp
+        end = end.timestamp()
+        start = start.timestamp()
         history_resp = zapi.history.get(itemids=itemid,
                                         output='extend',
                                         sortfield='clock',
                                         sortorder='ASC',
-                                        limit=10,
-                                        history=0)
+                                        history=0,
+                                        time_from=start,
+                                        time_till=end)
         if history_resp:
             _history_resp = []
             for item in history_resp:
-                _history_resp.append((item['clock'], item['value']))
+                dt = datetime.datetime.fromtimestamp(float(item['clock']))
+                time = dt.strftime('%Y/%m/%d %H:%M:%S')
+                value = round(100 - float(item['value']), 2)
+                _history_resp.append((time, value))
             _history_resp = OrderedDict(_history_resp)
-            return JsonResponse(_history_resp)
+            data = [{'name': time, 'value':[time, value]} for time, value in _history_resp.items()]
+            history_data = {'data': data}
+
+            return JsonResponse(history_data)
         else:
-            return JsonResponse({'clock':'', 'value': ''})
+            return JsonResponse({'data': []})

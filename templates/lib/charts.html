@@ -1,10 +1,31 @@
 <script>
     var myChart = echarts.init(document.getElementById('main'));
-    var data = [
-        {name:'2017/12/18 6:38:08', value:['2017/12/18 6:38:08', 80]},
-        {name:'2017/12/18 16:18:18', value:['2017/12/18 16:18:18', 60]},
-        {name:'2017/12/18 19:18:18', value:['2017/12/18 19:18:18', 90]}
-    ];
+
+{#    var data = [#}
+{#    {name:'2017/12/18 6:38:08', value:['2017/12/18 6:38:08', 80]},#}
+{#    {name:'2017/12/18 16:18:18', value:['2017/12/18 16:18:18', 60]},#}
+{#    {name:'2017/12/18 19:18:18', value:['2017/12/18 19:18:18', 90]}#}
+{#    ];#}
+    var history_data;
+    var data;
+    function getHistoryData() {
+        $.ajax({
+            url: "{% url 'monitor:history' host.hostname 'idle' %}",
+            type: 'get',
+            dataType: 'json',
+            async: false,
+            success: function(data) {
+                if (data.data) {
+                    history_data = data.data;
+                } else {
+                    alert('Error: history is not found');
+                }
+            }
+        });
+        data = history_data;
+        return history_data
+    }
+
     var option = {
         title: {
             text: 'CPU使用率'
@@ -39,7 +60,7 @@
             showSymbol: false,
             hoverAnimation: false,
             smooth: true,
-            data: data
+            data: getHistoryData()
         }]
     };
     myChart.setOption(option);
@@ -57,7 +78,7 @@
                     value: [
                         [date.getFullYear(), date.getMonth() + 1, date.getDate()].join('/') + ' ' +
                         [date.getHours(), date.getMinutes(), date.getSeconds()].join(':'),
-                        Math.round(value)
+                        (100 - value).toFixed(2)
                     ]
                 });
                 if (statusTxt == "error")
