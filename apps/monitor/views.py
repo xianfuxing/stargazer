@@ -81,3 +81,7 @@ class HistoryDetailView(ItemDetailView):
             return JsonResponse(history_data)
         else:
             return JsonResponse({'data': []})
+
+
+class TriggerListView(ZapiMixin, View):
+    pass
