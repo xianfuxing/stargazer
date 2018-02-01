@@ -39,6 +39,10 @@ body {
     font-weight: 600;
 }
 
+.table tbody .text-danger {
+    color: #ff0000;
+}
+
 /* end server list table styles */
 
 

@@ -75,6 +75,9 @@ class Host(models.Model):
         verbose_name = '主机'
         verbose_name_plural = verbose_name
 
+    def is_expired(self):
+        return self.expiration_date - timezone.now() <= timezone.timedelta(days=30)
+
     def __str__(self):
         return self.hostname
 
