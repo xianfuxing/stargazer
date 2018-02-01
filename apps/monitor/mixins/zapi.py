@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.cache import cache
 from pyzabbix import ZabbixAPI
 
+
 class ZapiMixin(object):
     """
      Mixin for return zapi
