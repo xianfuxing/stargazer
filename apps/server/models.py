@@ -21,11 +21,24 @@ class Org(models.Model):
     def get_stopped_count(self):
         return self.host_set.filter(status='stopped').count()
 
-    def get_retired_count(self):
-        return self.host_set.filter(status='retired').count()
-
     def get_all_count(self):
         return self.host_set.all().count()
+
+    def get_will_be_expired_count(self):
+        host_set = self.host_set.all()
+        self.will_be_expired_count = 0
+        for host in host_set:
+            if host.will_be_expired():
+                self.will_be_expired_count += 1
+        return self.will_be_expired_count
+
+    def get_is_expired_count(self):
+        host_set = self.host_set.all()
+        self.is_expired_count = 0
+        for host in host_set:
+            if host.is_expired():
+                self.is_expired_count += 1
+        return self.is_expired_count
 
     def __str__(self):
         return self.name
@@ -49,7 +62,6 @@ class Host(models.Model):
     STATUS_CHOICES = (
         ('running', '运行中'),
         ('stopped', '已停止'),
-        ('retired', '已退役'),
     )
 
     PAY_CHOICES = (
@@ -75,8 +87,13 @@ class Host(models.Model):
         verbose_name = '主机'
         verbose_name_plural = verbose_name
 
+    def will_be_expired(self):
+        timedelta = self.expiration_date - timezone.now()
+        return timezone.timedelta(0) <= timedelta <= timezone.timedelta(days=30)
+
     def is_expired(self):
-        return self.expiration_date - timezone.now() <= timezone.timedelta(days=30)
+        timedelta = self.expiration_date - timezone.now()
+        return timedelta < timezone.timedelta(0)
 
     def __str__(self):
         return self.hostname
