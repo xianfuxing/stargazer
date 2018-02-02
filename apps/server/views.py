@@ -5,6 +5,7 @@ from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, ListView, DeleteView
 from pure_pagination.mixins import PaginationMixin
 
+from .mixins.page_cache import CacheMixin
 from .models import Host, Org
 
 
@@ -12,9 +13,10 @@ class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
 
-class ServerOverviewView(ListView):
+class ServerOverviewView(CacheMixin, ListView):
     model = Org
     pk_url_kwarg = 'org_list'
+    cache_timeout = 3600
     template_name = 'server/overview.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
