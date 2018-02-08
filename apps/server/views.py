@@ -13,7 +13,7 @@ class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
 
-class ServerOverviewView(ListView):
+class ServerOverviewView(CacheMixin, ListView):
     model = Org
     pk_url_kwarg = 'org_list'
     cache_timeout = 3600
@@ -94,8 +94,3 @@ class ServerDetailView(DeleteView):
 
 def index(request):
     return render(request, 'server/index.html')
-
-
-def fake_bar(request):
-    data = random.randint(5, 100)
-    return HttpResponse(data)
