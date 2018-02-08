@@ -13,7 +13,7 @@ class DashboardView(TemplateView):
     template_name = 'server/dashboard.html'
 
 
-class ServerOverviewView(CacheMixin, ListView):
+class ServerOverviewView(ListView):
     model = Org
     pk_url_kwarg = 'org_list'
     cache_timeout = 3600
@@ -54,11 +54,21 @@ class ServerListView(PaginationMixin, ListView):
         query_set = super().get_queryset()
         status = self.request.GET.get('status', '')
         org = self.request.GET.get('org', '')
+        due = self.request.GET.get('due', '')
         if org:
             query_set = query_set.filter(org=org)
 
-        if status == 'stopped' or status == 'retired':
+        if status == 'stopped' or status == 'running':
             query_set = query_set.filter(status=status)
+
+        if due == 'soon':
+            if query_set:
+                return [host for host in query_set if host.will_be_expired]
+        elif due == 'yes':
+            if query_set:
+                return [host for host in query_set if host.is_expired]
+        else:
+            return query_set
 
         return query_set
 

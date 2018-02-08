@@ -28,7 +28,7 @@ class Org(models.Model):
         host_set = self.host_set.all()
         self.will_be_expired_count = 0
         for host in host_set:
-            if host.will_be_expired():
+            if host.will_be_expired:
                 self.will_be_expired_count += 1
         return self.will_be_expired_count
 
@@ -36,7 +36,7 @@ class Org(models.Model):
         host_set = self.host_set.all()
         self.is_expired_count = 0
         for host in host_set:
-            if host.is_expired():
+            if host.is_expired:
                 self.is_expired_count += 1
         return self.is_expired_count
 
@@ -87,10 +87,12 @@ class Host(models.Model):
         verbose_name = '主机'
         verbose_name_plural = verbose_name
 
+    @property
     def will_be_expired(self):
         timedelta = self.expiration_date - timezone.now()
         return timezone.timedelta(0) <= timedelta <= timezone.timedelta(days=30)
 
+    @property
     def is_expired(self):
         timedelta = self.expiration_date - timezone.now()
         return timedelta < timezone.timedelta(0)

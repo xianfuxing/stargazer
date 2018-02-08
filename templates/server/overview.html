@@ -33,7 +33,7 @@
                                 {% else %}
                                     <td><span class="badge bg-yellow">{{ org.get_stopped_count }}</span></td>
                                 {% endif %}
-                                <td><span class="badge bg-red">{{ org.get_will_be_expired_count }}</span></td>
+                                <td><a href="{% url 'server:list' %}?due=soon"><span class="badge bg-red">{{ org.get_will_be_expired_count }}</span></a></td>
                                 <td><span class="badge bg-red">{{ org.get_is_expired_count }}</span></td>
                             </tr>
                         {% endfor %}
