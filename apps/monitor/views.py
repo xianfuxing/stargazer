@@ -23,12 +23,16 @@ class HostidDetailView(ZapiMixin, View):
 
 
 class ItemDetailView(HostidDetailView):
-    def get(self, request, host_name, item_key):
-        item_resp = self.get_itemid(host_name, item_key)
+
+    def get(self, request, host_name, item_type, item_key):
+        item_resp = self.get_itemid(host_name, item_type, item_key)
 
         return JsonResponse(item_resp)
 
-    def get_itemid(self, host_name, item_key):
+    def get_itemid(self, host_name, item_type, item_key):
+        item_type_map = {
+            "cpu": "system.cpu.util[,{0}]",
+        }
         zapi = self.get_zapi()
         hostid_resp = self.get_hostid(host_name)
         if not hostid_resp['hostid']:
@@ -36,9 +40,18 @@ class ItemDetailView(HostidDetailView):
 
         # Get hostid
         hostid = hostid_resp['hostid']
-        item_resp = zapi.item.get(search={'key_': 'system.cpu.util[,{0}]'.format(item_key)},
+
+        # Get item_type
+        item_type = item_type_map.get(item_type, '')
+        # If item_tpe is exist return item_resp
+        if item_type:
+            item_resp = zapi.item.get(search={'key_': item_type.format(item_key)},
                              hostids=hostid,
                              output=['lastclock', 'itemid', 'lastvalue'])
+        else:
+            return {'itemid': '', 'lastclock': '', 'lastvalue': ''}
+
+        # Return item response if is not empty
         if item_resp:
             return item_resp[0]
         else:
@@ -46,8 +59,8 @@ class ItemDetailView(HostidDetailView):
 
 
 class HistoryDetailView(ItemDetailView):
-    def get(self, request, host_name, item_key):
-        item_resp = self.get_itemid(host_name, item_key)
+    def get(self, request, host_name, item_type, item_key):
+        item_resp = self.get_itemid(host_name, item_type, item_key)
         if not item_resp['itemid']:
             return JsonResponse({'clock': '', 'value': ''})
 

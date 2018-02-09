@@ -5,7 +5,7 @@
     var data;
     function getHistoryData(callback) {
         $.ajax({
-            url: "{% url 'monitor:history' host.hostname 'idle' %}",
+            url: "{% url 'monitor:history' host.hostname 'cpu' 'idle' %}",
             type: 'get',
             dataType: 'json',
             async: true,
@@ -62,7 +62,7 @@
         myChart.setOption(option);
 
         setInterval(function () {
-             $.get("{% url 'monitor:item' host.hostname 'idle' %}", function(responseTxt, statusTxt, xhr)
+             $.get("{% url 'monitor:item' host.hostname 'cpu' 'idle' %}", function(responseTxt, statusTxt, xhr)
                  {
                     value = responseTxt.lastvalue;
                     date = new Date(parseInt(responseTxt.lastclock) * 1000);
