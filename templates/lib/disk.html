@@ -32,8 +32,25 @@
                 if (_data) {
                     free_disk = _data.lastvalue / (1024 * 1024 * 1024);
                     free_disk = free_disk.toFixed(2);
-                    console.log(free_disk);
-                    callback(free_disk);
+
+                    // get total disk data
+                    $.ajax({
+                        url: "{% url 'monitor:item' host.hostname 'disk' 'total' %}",
+                        type: 'get',
+                        dataType: 'json',
+                        async: true,
+                        success: function (_data) {
+                            if(_data) {
+                                total_disk = _data.lastvalue / (1024 * 1024 * 1024);
+                                total_disk = total_disk.toFixed(2);
+                                console.log(total_disk);
+                                callback(free_disk, total_disk - free_disk);
+                            } else {
+                                alert("Total disk data not found.");
+                            }
+                        }
+                    });
+                    //
                 } else {
                     alert("Free disk data not found.");
                 }
@@ -41,11 +58,11 @@
         });
     }
 
-    getFreeDiskData(function (free_disk) {
+    getFreeDiskData(function (free_disk, unused_disk) {
         var option = {
             title: {
                 text: '磁盘使用率',
-                subtext: '{{ host.hostname }}',
+                subtext: '/weblogic Total: ' + total_disk,
                 x: 'center'
             },
             tooltip: {
@@ -65,7 +82,7 @@
                     radius: '55%',
                     center: ['50%', '60%'],
                     data: [
-                        {value: 335, name: '已使用'},
+                        {value: unused_disk, name: '已使用'},
                         {value: free_disk, name: '未使用'},
                     ],
                     itemStyle: {
