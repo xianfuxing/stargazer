@@ -32,6 +32,7 @@ class ItemDetailView(HostidDetailView):
     def get_itemid(self, host_name, item_type, item_key):
         item_type_map = {
             "cpu": "system.cpu.util[,{0}]",
+            "disk": "vfs.fs.size[/weblogic,{0}]"
         }
         zapi = self.get_zapi()
         hostid_resp = self.get_hostid(host_name)
@@ -68,7 +69,7 @@ class HistoryDetailView(ItemDetailView):
         zapi = self.get_zapi()
 
         end = datetime.datetime.now()
-        start = end - datetime.timedelta(0,3600)
+        start = end - datetime.timedelta(0, 3600)
 
         # to timestamp
         end = end.timestamp()
