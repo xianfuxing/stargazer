@@ -66,8 +66,7 @@
                  {
                     value = responseTxt.lastvalue;
                     date = new Date(parseInt(responseTxt.lastclock) * 1000);
-                    console.log(date.getHours()+' '+ date.getMinutes());
-                    console.log(statusTxt);
+                    console.log(statusTxt + ' ' + date.getHours()+' '+ date.getMinutes());
                     //if (statusTxt == "success")alert(test);
                     data.shift();
                     data.push({

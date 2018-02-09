@@ -1,0 +1,83 @@
+<script>
+    var myPie = echarts.init(document.getElementById('disk'));
+    var total_disk;
+    var free_disk;
+
+    function getTotalDiskData(callback) {
+        $.ajax({
+            url: "{% url 'monitor:item' host.hostname 'disk' 'total' %}",
+            type: 'get',
+            dataType: 'json',
+            async: true,
+            success: function (_data) {
+                if(_data) {
+                    total_disk = _data.lastvalue / (1024 * 1024 * 1024);
+                    total_disk = total_disk.toFixed(2);
+                    console.log(total_disk);
+                    callback(total_disk);
+                } else {
+                    alert("Total disk data not found.");
+                }
+            }
+        });
+    }
+
+    function getFreeDiskData(callback) {
+        $.ajax({
+            url: "{% url 'monitor:item' host.hostname 'disk' 'free' %}",
+            type: 'get',
+            dataType: 'json',
+            async: true,
+            success: function (_data) {
+                if (_data) {
+                    free_disk = _data.lastvalue / (1024 * 1024 * 1024);
+                    free_disk = free_disk.toFixed(2);
+                    console.log(free_disk);
+                    callback(free_disk);
+                } else {
+                    alert("Free disk data not found.");
+                }
+            }
+        });
+    }
+
+    getFreeDiskData(function (free_disk) {
+        var option = {
+            title: {
+                text: '磁盘使用率',
+                subtext: '{{ host.hostname }}',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            color: ['#D48265', '#91C7AE'],
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['已使用', '未使用']
+            },
+            series: [
+                {
+                    name: '磁盘使用率',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [
+                        {value: 335, name: '已使用'},
+                        {value: free_disk, name: '未使用'},
+                    ],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        };
+        myPie.setOption(option);
+    });
+</script>

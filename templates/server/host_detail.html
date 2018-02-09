@@ -120,6 +120,8 @@
                 </div>
             </div>
             <div class="col-md-6 col-md-push-1" id="cpu" style="width: 600px;height:400px;"></div>
+            <div class="col-md-6 col-md-push-1" id="disk" style="width: 600px;height:400px;">
+            </div>
         </div>
     </div>
 
@@ -129,4 +131,5 @@
     {{ block.super }}
     <script src="https://cdn.bootcss.com/echarts/3.8.5/echarts.min.js"></script>
     {% include 'lib/charts.html' %}
+    {% include 'lib/disk.html' %}
 {% endblock javascript %}

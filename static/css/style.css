@@ -73,4 +73,7 @@ body {
     float: none;
 }
 
+#disk {
+    margin-top: 20px;
+}
 /* end server detail page styles */
