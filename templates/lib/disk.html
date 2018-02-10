@@ -14,7 +14,7 @@
                     total_disk = _data.lastvalue / (1024 * 1024 * 1024);
                     total_disk = total_disk.toFixed(2);
                     console.log(total_disk);
-                    callback(total_disk);
+                    callback(free_disk, total_disk - free_disk);
                 } else {
                     alert("Total disk data not found.");
                 }
@@ -34,23 +34,7 @@
                     free_disk = free_disk.toFixed(2);
 
                     // get total disk data
-                    $.ajax({
-                        url: "{% url 'monitor:item' host.hostname 'disk' 'total' %}",
-                        type: 'get',
-                        dataType: 'json',
-                        async: true,
-                        success: function (_data) {
-                            if(_data) {
-                                total_disk = _data.lastvalue / (1024 * 1024 * 1024);
-                                total_disk = total_disk.toFixed(2);
-                                console.log(total_disk);
-                                callback(free_disk, total_disk - free_disk);
-                            } else {
-                                alert("Total disk data not found.");
-                            }
-                        }
-                    });
-                    //
+                    getTotalDiskData(callback);
                 } else {
                     alert("Free disk data not found.");
                 }
