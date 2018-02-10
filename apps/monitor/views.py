@@ -14,7 +14,7 @@ class HostidDetailView(ZapiMixin, View):
     def get_hostid(self, host_name):
         zapi = self.get_zapi()
         try:
-            resp = zapi.host.get(filter={'host':[host_name]}, output=['hostid', 'name'])
+            resp = zapi.host.get(filter={'host': [host_name]}, output=['hostid', 'name'])
             resp = resp[0]
         except IndexError:
             resp = {'hostid': '', 'name': ''}
@@ -98,4 +98,9 @@ class HistoryDetailView(ItemDetailView):
 
 
 class TriggerListView(ZapiMixin, View):
-    pass
+    def get(self, request):
+        zapi = self.get_zapi()
+        trigger_list = zapi.trigger.get(filter={'value': 1})
+        if trigger_list:
+            for trigger in trigger_list:
+                triggerId = trigger['triggerids']
