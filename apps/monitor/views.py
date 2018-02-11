@@ -6,48 +6,48 @@ from django.views.generic import View
 from .mixins.zapi import ZapiMixin
 
 
-class HostidDetailView(ZapiMixin, View):
+class HostDetailView(ZapiMixin, View):
     def get(self, request, host_name):
-        hostid_resp = self.get_hostid(host_name)
-        return JsonResponse(hostid_resp)
+        host_reps = self.get_host(host_name)
+        return JsonResponse(host_reps)
 
-    def get_hostid(self, host_name):
+    def get_host(self, host_name=None, **kwargs):
         zapi = self.get_zapi()
         try:
-            resp = zapi.host.get(filter={'host': [host_name]}, output=['hostid', 'name'])
-            resp = resp[0]
+            if host_name:
+                host_resp = zapi.host.get(filter={'host': [host_name]}, output=['hostid', 'name'], **kwargs)
+            host_resp = zapi.host.get(output=['hostid', 'name'], **kwargs)
+            host_resp = host_resp[0]
         except IndexError:
-            resp = {'hostid': '', 'name': ''}
+            host_resp = {'hostid': '', 'name': ''}
+        return host_resp
 
-        return resp
 
-
-class ItemDetailView(HostidDetailView):
-
+class ItemDetailView(HostDetailView):
     def get(self, request, host_name, item_type, item_key):
-        item_resp = self.get_itemid(host_name, item_type, item_key)
+        item_resp = self.get_item(host_name, item_type, item_key)
 
         return JsonResponse(item_resp)
 
-    def get_itemid(self, host_name, item_type, item_key):
+    def get_item(self, host_name, item_type, item_key):
         item_type_map = {
             "cpu": "system.cpu.util[,{0}]",
             "disk": "vfs.fs.size[/weblogic,{0}]"
         }
         zapi = self.get_zapi()
-        hostid_resp = self.get_hostid(host_name)
-        if not hostid_resp['hostid']:
+        host_reps = self.get_host(host_name)
+        if not host_reps['hostid']:
             return {'hostid': '', 'name': '', 'lastvalue': ''}
 
         # Get hostid
-        hostid = hostid_resp['hostid']
+        host_id = host_reps['hostid']
 
         # Get item_type
         item_type = item_type_map.get(item_type, '')
         # If item_tpe is exist return item_resp
         if item_type:
             item_resp = zapi.item.get(search={'key_': item_type.format(item_key)},
-                             hostids=hostid,
+                             hostids=host_id,
                              output=['lastclock', 'itemid', 'lastvalue'])
         else:
             return {'itemid': '', 'lastclock': '', 'lastvalue': ''}
@@ -61,7 +61,7 @@ class ItemDetailView(HostidDetailView):
 
 class HistoryDetailView(ItemDetailView):
     def get(self, request, host_name, item_type, item_key):
-        item_resp = self.get_itemid(host_name, item_type, item_key)
+        item_resp = self.get_item(host_name, item_type, item_key)
         if not item_resp['itemid']:
             return JsonResponse({'clock': '', 'value': ''})
 
@@ -97,10 +97,18 @@ class HistoryDetailView(ItemDetailView):
             return JsonResponse({'data': []})
 
 
-class TriggerListView(ZapiMixin, View):
+class TriggerListView(HostDetailView):
     def get(self, request):
+        trigger_resp = {}
         zapi = self.get_zapi()
-        trigger_list = zapi.trigger.get(filter={'value': 1})
+        trigger_list = zapi.trigger.get(filter={'value': 1}, output=['triggerid', 'description', 'value'])
         if trigger_list:
             for trigger in trigger_list:
-                triggerId = trigger['triggerids']
+                triggerid = trigger['triggerid']
+                try:
+                    res = self.get_host(triggerids=triggerid)
+                    hostname = self.get_host(triggerids=triggerid)['name']
+                except KeyError:
+                    hostname = None
+                trigger_resp[hostname] = 
+        return JsonResponse(trigger_resp)
