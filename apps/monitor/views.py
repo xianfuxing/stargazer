@@ -105,10 +105,17 @@ class TriggerListView(HostDetailView):
         if trigger_list:
             for trigger in trigger_list:
                 triggerid = trigger['triggerid']
+
+                # Get hostname
                 try:
                     res = self.get_host(triggerids=triggerid)
                     hostname = self.get_host(triggerids=triggerid)['name']
                 except KeyError:
                     hostname = None
-                trigger_resp[hostname] = 
+
+                # Get trigger resp
+                try:
+                    trigger_resp[hostname] += [trigger]
+                except KeyError:
+                    trigger_resp[hostname] = [trigger]
         return JsonResponse(trigger_resp)
