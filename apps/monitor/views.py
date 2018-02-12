@@ -101,7 +101,7 @@ class TriggerListView(HostDetailView):
     def get(self, request):
         trigger_resp = {}
         zapi = self.get_zapi()
-        trigger_list = zapi.trigger.get(filter={'value': 1}, output=['triggerid', 'description', 'value'])
+        trigger_list = zapi.trigger.get(filter={'value': 1}, output=['triggerid', 'description', 'value', 'lastchange'])
         if trigger_list:
             for trigger in trigger_list:
                 triggerid = trigger['triggerid']
