@@ -17,7 +17,7 @@ class DashboardView(TemplateView):
 class ServerOverviewView(CacheMixin, ListView):
     model = Org
     pk_url_kwarg = 'org_list'
-    cache_timeout = 3600
+    cache_timeout = 300
     template_name = 'server/overview.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):

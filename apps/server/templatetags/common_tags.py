@@ -83,7 +83,7 @@ def get_server_status_count():
             status_count += 1
 
     issue_count = not_running_count + status_count
-    cache.set('issue_count', issue_count, 600)
+    cache.set('issue_count', issue_count, 300)
     return issue_count
 
 
