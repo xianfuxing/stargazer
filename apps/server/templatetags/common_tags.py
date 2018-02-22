@@ -1,5 +1,8 @@
+import requests
+import json
 from django import template
 from django.db.models import Q
+from django.core.cache import cache
 
 from server.models import Host
 
@@ -9,9 +12,6 @@ try:
 except ImportError:
     # Django 1.x
     from django.urls import reverse
-
-from server.models import Host
-
 
 register = template.Library()
 
@@ -68,6 +68,44 @@ def is_active_reverse(request, args, *urlnames):
 
 
 @register.simple_tag()
-def get_not_running():
+def get_server_status_count():
+    # Get result from cache if exist
+    issue_count = cache.get('issue_count')
+    if issue_count:
+        return issue_count
+
+    status_count = 0
     not_running_count = Host.objects.filter(~Q(status='running')).count()
-    return not_running_count
+    for host in Host.objects.all():
+        if host.is_expired:
+            status_count += 1
+        elif host.will_be_expired:
+            status_count += 1
+
+    issue_count = not_running_count + status_count
+    cache.set('issue_count', issue_count, 600)
+    return issue_count
+
+
+@register.simple_tag()
+def get_trigger_count(request):
+    trigger_count = cache.get('trigger_count')
+    if trigger_count:
+        return trigger_count
+    trigger_count = 0
+    # Get trigger count from zapi
+    url = 'http://' + request.META['HTTP_HOST'] + reverse('monitor:trigger')
+    try:
+        r = requests.get(url)
+        trigger_resp = json.loads(r.text)
+        for k in trigger_resp:
+            trigger_count += len(trigger_resp[k])
+    except Exception as e:
+        print(e)
+    cache.set('trigger_count', trigger_count, 300)
+    return trigger_count
+
+
+@register.filter(name='my_add')
+def my_add(value1, value2):
+    return value1 + value2

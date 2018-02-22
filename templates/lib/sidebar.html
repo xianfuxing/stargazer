@@ -8,7 +8,11 @@
         <a href="{% url 'dashboard' %}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
-                <small class="label pull-right bg-yellow">{% get_not_running %}</small>
+                {% get_server_status_count as status_count %}
+                {% get_trigger_count request as trigger_count %}
+                {% if status_count > 0 or trigger_count > 0 %}
+                    <small class="label pull-right bg-yellow">{{ trigger_count|my_add:status_count }}</small>
+                {% endif %}
             </span>
         </a>
     </li>

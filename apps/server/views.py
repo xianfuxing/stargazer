@@ -10,6 +10,7 @@ from .models import Host, Org
 
 
 class DashboardView(TemplateView):
+    # cache_timeout = 300
     template_name = 'server/dashboard.html'
 
 
@@ -27,6 +28,7 @@ class ServerOverviewView(CacheMixin, ListView):
 
 
 class ServerListView(PaginationMixin, ListView):
+    # cache_timeout = 300
     model = Host
     context_object_name = 'hosts'
     template_name = 'server/host_list.html'
