@@ -1,16 +1,14 @@
-import random
-import numpy as np
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from django.views.generic import TemplateView, ListView, DeleteView
+from django.views.generic import TemplateView, ListView, DetailView
 from pure_pagination.mixins import PaginationMixin
 
 from .mixins.page_cache import CacheMixin
 from .models import Host, Org
 
 
-class DashboardView(TemplateView):
-    # cache_timeout = 300
+class DashboardView(CacheMixin, TemplateView):
+    cache_timeout = 300
     template_name = 'server/dashboard.html'
 
 
@@ -27,8 +25,8 @@ class ServerOverviewView(CacheMixin, ListView):
         return ctx
 
 
-class ServerListView(PaginationMixin, ListView):
-    # cache_timeout = 300
+class ServerListView(CacheMixin, PaginationMixin, ListView):
+    cache_timeout = 300
     model = Host
     context_object_name = 'hosts'
     template_name = 'server/host_list.html'
@@ -74,15 +72,15 @@ class ServerListView(PaginationMixin, ListView):
 
         return query_set
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        ctx = super().get_context_data(object_list=None, **kwargs)
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
         host_count = Host.objects.all().count()
         ctx['host_count'] = host_count
 
         return ctx
 
 
-class ServerDetailView(DeleteView):
+class ServerDetailView(DetailView):
     pk_url_kwarg = 'host_id'
     model = Host
     context_object_name = 'host'
