@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView, ListView, DetailView
 from pure_pagination.mixins import PaginationMixin
 
@@ -7,26 +8,23 @@ from .mixins.page_cache import CacheMixin
 from .models import Host, Org
 
 
-class DashboardView(CacheMixin, TemplateView):
-    cache_timeout = 300
+class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'server/dashboard.html'
 
 
-class ServerOverviewView(CacheMixin, ListView):
+class ServerOverviewView(LoginRequiredMixin, ListView):
     model = Org
     pk_url_kwarg = 'org_list'
-    cache_timeout = 300
     template_name = 'server/overview.html'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         ctx = super().get_context_data(object_list=None, **kwargs)
         ctx['host_count'] = Host.objects.all().count()
         ctx['is_stopped'] = Host.objects.filter(status='stopped').count()
         return ctx
 
 
-class ServerListView(CacheMixin, PaginationMixin, ListView):
-    cache_timeout = 300
+class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
     model = Host
     context_object_name = 'hosts'
     template_name = 'server/host_list.html'
@@ -80,7 +78,7 @@ class ServerListView(CacheMixin, PaginationMixin, ListView):
         return ctx
 
 
-class ServerDetailView(DetailView):
+class ServerDetailView(LoginRequiredMixin, DetailView):
     pk_url_kwarg = 'host_id'
     model = Host
     context_object_name = 'host'

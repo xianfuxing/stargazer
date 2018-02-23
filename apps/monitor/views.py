@@ -1,6 +1,7 @@
 import datetime
 from collections import OrderedDict
 from django.http import JsonResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 
 from .mixins.zapi import ZapiMixin
