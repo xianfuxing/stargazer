@@ -1,13 +1,28 @@
 {% extends "adminlte/base.html" %}
 {% load i18n static %}
 
-{% block body_class %}logout-page{% endblock %}
+{% block body_class %}login-page{% endblock %}
 
 {% block title %}Logout{% endblock %}
 
 {% block body %}
     <div class="logout-box">
-        Logout.
-        login again <a href="{% url 'users:login' %}">Login</a>
+        {% block logo %}
+        <div class="login-logo">
+            <a href="{% block logo_href %}/{% endblock %}">{% block logo_text %}<b>Admin</b>LTE{% endblock %}</a>
+        </div>
+        {% endblock %}
+        <div class= "logout-box-body">
+            <h3 class="text-green">成功退出</h3>
+            <p>感谢您今天在本站花费了一些宝贵时间。</p>
+            <button type="button" class="btn btn-default">
+                <a href="{% url 'users:login' %}">重新登录</a>
+            </button>
+        </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
 {% endblock %}

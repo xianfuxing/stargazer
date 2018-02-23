@@ -4,3 +4,22 @@
     margin-bottom: 5px;
 }
 /* end login styles */
+
+/* start logout styles */
+.logout-box {
+    width: 360px;
+    margin: 7% auto;
+    margin-top: 7%;
+    margin-right: auto;
+    margin-bottom: 7%;
+    margin-left: auto;
+}
+
+.logout-box-body {
+    background: #fff;
+    padding: 20px;
+    border-top: 0;
+    color: #666;
+}
+
+/* end logout sytles */
