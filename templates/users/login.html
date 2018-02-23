@@ -22,7 +22,6 @@
                             {% trans "Please correct the errors below." %}{% endif %}
                     </p>
                 {% endif %}
-
                 {% if form.non_field_errors %}
                     {% for error in form.non_field_errors %}
                         <p class="alert alert-danger">
@@ -38,12 +37,20 @@
                     {% if message %}
                         <p class="login-box-msg" style="color: red;">{{ message }}</p>
                     {% endif %}
+                    {% if form.username.errors %}
+                        <div class="field-error">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>
+                    {% endif %}
                     <div class="form-group has-feedback">
-                        <input name="username" class="form-control" placeholder="Username">
+                        <input name="username" class="form-control" placeholder="Username"
+                               value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
                         <span class="glyphicon glyphicon-user form-control-feedback"></span>
                     </div>
+                    {% if form.password.errors %}
+                        <div class="field-error">{% for error in form.password.errors %}{{ error }}{% endfor %}</div>
+                    {% endif %}
                     <div class="form-group has-feedback">
-                        <input type="password" name="password" class="form-control" placeholder="Password">
+                        <input type="password" name="password" class="form-control" placeholder="Password"
+                               value="{% if form.password.value %}{{ form.password.value }}{% endif %}">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
                     <div class="row">
@@ -60,4 +67,9 @@
 
         </div>
     </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
 {% endblock %}
