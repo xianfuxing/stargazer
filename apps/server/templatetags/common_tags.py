@@ -93,10 +93,15 @@ def get_trigger_count(request):
     if trigger_count:
         return trigger_count
     trigger_count = 0
+
     # Get trigger count from zapi
+    cookies = request.COOKIES
     url = 'http://' + request.META['HTTP_HOST'] + reverse('monitor:trigger')
     try:
-        r = requests.get(url)
+        s = requests.Session()
+        for k in cookies:
+            s.cookies[k] = cookies[k]
+        r = s.get(url)
         trigger_resp = json.loads(r.text)
         for k in trigger_resp:
             trigger_count += len(trigger_resp[k])

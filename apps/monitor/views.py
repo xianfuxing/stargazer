@@ -7,7 +7,7 @@ from django.views.generic import View
 from .mixins.zapi import ZapiMixin
 
 
-class HostDetailView(ZapiMixin, View):
+class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
     def get(self, request, host_name):
         host_reps = self.get_host(host_name)
         return JsonResponse(host_reps)
