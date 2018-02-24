@@ -53,6 +53,11 @@
                                value="{% if form.password.value %}{{ form.password.value }}{% endif %}">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
+                    {% if form.captcha %}
+                    <div class="form-group has-feedback">
+                        {{ form.captcha }}
+                    </div>
+                    {% endif %}
                     <div class="row">
                         <div class="col-xs-8">
                             {% block login_form_links %}
