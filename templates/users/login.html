@@ -78,3 +78,8 @@
     {{ block.super }}
     <link rel="stylesheet" type="text/css" href="{% static "css/login.css" %}">
 {% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script src="{% static "js/login.js" %}"></script>
+{% endblock %}
