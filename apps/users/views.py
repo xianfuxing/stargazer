@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.signals import user_login_failed
+from django.conf import settings
 from django.core.cache import cache
 from .forms import LoginForm, CaptchaLoginForm
 
@@ -8,11 +9,12 @@ from .forms import LoginForm, CaptchaLoginForm
 class MYLoginView(LoginView):
     redirect_authenticated_user = True
     form_class = LoginForm
+    login_failures = settings.CAPTCHA_LOGIN_FAILURES
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests: instantiate a blank version of the form."""
         failures = self.get_failures(request)
-        if failures >= 3:
+        if failures >= self.login_failures:
             return render(request, 'users/login.html', {'form': CaptchaLoginForm()})
         return self.render_to_response(self.get_context_data())
 
@@ -36,7 +38,7 @@ class MYLoginView(LoginView):
             )
             # Check if failed login more than three times
             failures = cache.get(csrftoken, 0)
-            if failures >= 3:
+            if failures >= self.login_failures:
                 form = CaptchaLoginForm()
             return self.form_invalid(form)
 
