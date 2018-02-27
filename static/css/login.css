@@ -31,4 +31,8 @@
     margin-left: 15px;
 }
 
+img.captcha {
+    cursor: pointer;
+}
+
 /* end captcha styles */

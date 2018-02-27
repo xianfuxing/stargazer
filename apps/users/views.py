@@ -39,7 +39,7 @@ class MYLoginView(LoginView):
             # Check if failed login more than three times
             failures = cache.get(csrftoken, 0)
             if failures >= self.login_failures:
-                form = CaptchaLoginForm()
+                form = CaptchaLoginForm(**self.get_form_kwargs())
             return self.form_invalid(form)
 
     def get_failures(self, request):
