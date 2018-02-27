@@ -9,4 +9,4 @@ class LoginForm(AuthenticationForm):
 
 
 class CaptchaLoginForm(LoginForm):
-    captcha = CaptchaField()
+    captcha = CaptchaField(required=True, error_messages={'required': '请输入验证码'})

@@ -8,10 +8,10 @@
 {% block body %}
     <div class="login-box">
         {% block logo %}
-        <div class="login-logo">
-            {# Mirrors block names used in _main_header.html #}
-            <a href="{% block logo_href %}/{% endblock %}">{% block logo_text %}<b>Admin</b>LTE{% endblock %}</a>
-        </div>
+            <div class="login-logo">
+                {# Mirrors block names used in _main_header.html #}
+                <a href="{% block logo_href %}/{% endblock %}">{% block logo_text %}<b>Admin</b>LTE{% endblock %}</a>
+            </div>
         {% endblock %}
         <!-- /.login-logo -->
         <div class="login-box-body">
@@ -54,9 +54,12 @@
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
                     {% if form.captcha %}
-                    <div class="form-group has-feedback captcha-control">
-                        {{ form.captcha }}
-                    </div>
+                        {% if form.captcha.errors %}
+                            <div class="field-error">{% for error in form.captcha.errors %}{{ error }}{% endfor %}</div>
+                        {% endif %}
+                        <div class="form-group has-feedback captcha-control">
+                            {{ form.captcha }}
+                        </div>
                     {% endif %}
                     <div class="row">
                         <div class="col-xs-8">

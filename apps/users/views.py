@@ -32,7 +32,6 @@ class MYLoginView(LoginView):
                 sender=__name__,
                 request=request,
                 credentials={
-                    'username': form.cleaned_data.get('username'),
                     'csrftoken': csrftoken
                 }
             )
