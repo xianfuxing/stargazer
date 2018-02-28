@@ -44,7 +44,8 @@ class MYLoginView(LoginView):
             )
             return self.form_invalid(form)
 
-    def get_failures(self, request):
+    @staticmethod
+    def get_failures(request):
         csrftoken = request.COOKIES.get('csrftoken', '')
         failures = cache.get(csrftoken, 0)
         return failures
