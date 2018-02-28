@@ -14,7 +14,7 @@ class MYLoginView(LoginView):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests: instantiate a blank version of the form."""
-        failures = self.get_failures(request)
+        failures = self.get_failures(request) + 1
         if failures >= self.login_failures:
             return render(request, 'users/login.html', {'form': CaptchaLoginForm()})
         return self.render_to_response(self.get_context_data())
@@ -26,9 +26,9 @@ class MYLoginView(LoginView):
         """
         # If failures is gt 3, than use captcha form instead.
         form = self.get_form()
-        failures = self.get_failures(request)
+        failures = self.get_failures(request) + 1
         if failures >= self.login_failures:
-            form = CaptchaLoginForm(**self.get_form_kwargs())
+            form = self.get_form(form_class=CaptchaLoginForm)
         if form.is_valid():
             return self.form_valid(form)
         else:
@@ -40,11 +40,6 @@ class MYLoginView(LoginView):
                     'csrftoken': csrf_token
                 }
             )
-            # Check if failed login more than three times
-            failures = self.get_failures(request)
-            if failures >= self.login_failures:
-                form = CaptchaLoginForm(**self.get_form_kwargs())
-                print(form.errors)
             return self.form_invalid(form)
 
     def get_failures(self, request):
