@@ -32,6 +32,7 @@ class MYLoginView(LoginView):
         if failures >= self.login_failures:
             form = self.get_form(form_class=CaptchaLoginForm)
         if form.is_valid():
+            data = {''}
             return self.form_valid(form)
         else:
             csrf_token = request.COOKIES.get('csrftoken', '')
@@ -42,6 +43,15 @@ class MYLoginView(LoginView):
                     'csrftoken': csrf_token
                 }
             )
+            errors = form.errors
+            for field in form.fields:
+                _field = form.fields[field]
+                print(_field.error_messages)
+            non_field_errors = form.non_field_errors()
+            if non_field_errors:
+                resp = JsonResponse({'success': False, 'msg': non_field_errors})
+            elif errors and not non_field_errors:
+                resp = JsonResponse({'success': False, 'msg': errors})
             return self.form_invalid(form)
 
     @staticmethod
