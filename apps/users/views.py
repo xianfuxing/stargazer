@@ -32,7 +32,6 @@ class MYLoginView(LoginView):
         if failures >= self.login_failures:
             form = self.get_form(form_class=CaptchaLoginForm)
         if form.is_valid():
-            data = {''}
             return self.form_valid(form)
         else:
             csrf_token = request.COOKIES.get('csrftoken', '')
@@ -43,16 +42,10 @@ class MYLoginView(LoginView):
                     'csrftoken': csrf_token
                 }
             )
-            errors = form.errors
-            for field in form.fields:
-                _field = form.fields[field]
-                print(_field.error_messages)
-            non_field_errors = form.non_field_errors()
-            if non_field_errors:
-                resp = JsonResponse({'success': False, 'msg': non_field_errors})
-            elif errors and not non_field_errors:
-                resp = JsonResponse({'success': False, 'msg': errors})
-            return self.form_invalid(form)
+            data = self.get_form_errors(form)
+            return JsonResponse(data)
+
+            # return self.form_invalid(form)
 
     @staticmethod
     def get_failures(request):
@@ -60,3 +53,18 @@ class MYLoginView(LoginView):
         failures = cache.get(csrftoken, 0)
         return failures
 
+    @staticmethod
+    def get_form_errors(form):
+        data = {}
+        field_errors = {}
+        errors = form.errors
+        non_field_errors = form.non_field_errors()
+        if non_field_errors and not errors:
+            data = {'success': False, 'non_field_errors': non_field_errors}
+        elif errors and not non_field_errors:
+            for k in errors:
+                field_errors[k] = errors[k]
+            data = {'success': False, 'field_errors': field_errors}
+        elif errors and non_field_errors:
+            data = {'success': False, 'field_errors': field_errors, 'non_field_errors': non_field_errors}
+        return data

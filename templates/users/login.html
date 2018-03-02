@@ -85,4 +85,38 @@
 {% block javascript %}
     {{ block.super }}
     <script src="{% static "js/login.js" %}"></script>
+    <script>
+    $(document).ready(function(){
+        $('form').on('submit', function(e) { e.preventDefault()
+            $.ajax({
+                url: "{% url 'users:login' %}",
+                type: "post",
+                data: $('form').serialize(),
+                dataType: 'json',
+                async: true,
+                success: function (data) {
+                    if (data.success) {
+                        {#window.location.href="{% url 'server:overview' %}";#}
+                        console.log('login successfully');
+                    } else {
+                        var non_field_errors = data.non_field_errors;
+                        var field_errors = data.field_errors;
+                        if (data.show_captcha) {
+                            window.location.href="{% url 'users:login' %}";
+                        }
+                        if (non_field_errors) {
+                            var non_filed_alert = '<p class="alert alert-danger"></p>';
+                            {#for(err in )#}
+                        }
+                        if (field_errors) {
+
+                        }
+                        console.log(non_field_errors);
+                        console.log(field_errors);
+                    }
+                }
+            });
+        });
+    });
+    </script>
 {% endblock %}
