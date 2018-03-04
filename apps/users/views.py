@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
@@ -32,7 +33,8 @@ class MYLoginView(LoginView):
         if failures >= self.login_failures:
             form = self.get_form(form_class=CaptchaLoginForm)
         if form.is_valid():
-            return self.form_valid(form)
+            data = self.form_valid(form)
+            return JsonResponse(data)
         else:
             csrf_token = request.COOKIES.get('csrftoken', '')
             user_login_failed.send(
@@ -43,9 +45,18 @@ class MYLoginView(LoginView):
                 }
             )
             data = self.get_form_errors(form)
+            if failures >= self.login_failures:
+                captcha_html = str(form['captcha'])
+                data['captcha'] = captcha_html
             return JsonResponse(data)
 
             # return self.form_invalid(form)
+
+    def form_valid(self, form):
+        """Security check complete. Log the user in."""
+        auth_login(self.request, form.get_user())
+        data = {'success': True, 'msg': 'success'}
+        return data
 
     @staticmethod
     def get_failures(request):
@@ -64,7 +75,7 @@ class MYLoginView(LoginView):
         elif errors and not non_field_errors:
             for k in errors:
                 field_errors[k] = errors[k]
-            data = {'success': False, 'field_errors': field_errors}
+            data = {'success': False, 'field_errors': field_errors, 'tips': '请修正下面的错误'}
         elif errors and non_field_errors:
             data = {'success': False, 'field_errors': field_errors, 'non_field_errors': non_field_errors}
         return data

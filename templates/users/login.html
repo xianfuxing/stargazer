@@ -15,6 +15,7 @@
         {% endblock %}
         <!-- /.login-logo -->
         <div class="login-box-body">
+            <p class="alert alert-danger" style="display: none"></p>
             {% block login_errors %}
                 {% if form.errors and not form.non_field_errors %}
                     <p class="alert alert-danger">
@@ -40,6 +41,7 @@
                     {% if form.username.errors %}
                         <div class="field-error">{% for error in form.username.errors %}{{ error }}{% endfor %}</div>
                     {% endif %}
+                    <div class="field-error username-error" style="display: none;"></div>
                     <div class="form-group has-feedback">
                         <input name="username" class="form-control" placeholder="Username"
                                value="{% if form.username.value %}{{ form.username.value }}{% endif %}">
@@ -48,19 +50,23 @@
                     {% if form.password.errors %}
                         <div class="field-error">{% for error in form.password.errors %}{{ error }}{% endfor %}</div>
                     {% endif %}
+                    <div class="field-error password-error" style="display: none;"></div>
                     <div class="form-group has-feedback">
                         <input type="password" name="password" class="form-control" placeholder="Password"
                                value="{% if form.password.value %}{{ form.password.value }}{% endif %}">
                         <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                     </div>
+                    <div class="field-error captcha-error" style="display: none;"></div>
                     {% if form.captcha %}
                         {% if form.captcha.errors %}
                             <div class="field-error">{% for error in form.captcha.errors %}{{ error }}{% endfor %}</div>
                         {% endif %}
-                        <div class="form-group has-feedback captcha-control">
+                        <div class="form-group has-feedback captcha-control cpatcha-1">
                             {{ form.captcha }}
                         </div>
                     {% endif %}
+                    <div class="form-group has-feedback captcha-control captcha-2">
+                    </div>
                     <div class="row">
                         <div class="col-xs-8">
                             {% block login_form_links %}
@@ -96,23 +102,73 @@
                 async: true,
                 success: function (data) {
                     if (data.success) {
-                        {#window.location.href="{% url 'server:overview' %}";#}
+                        window.location.href="{% url 'server:overview' %}";
                         console.log('login successfully');
                     } else {
                         var non_field_errors = data.non_field_errors;
                         var field_errors = data.field_errors;
-                        if (data.show_captcha) {
-                            window.location.href="{% url 'users:login' %}";
+                        var captcha = $('form').find(".cpatcha-1");
+                        if (data.captcha) {
+                            wrapper = '<div class="form-group has-feedback captcha-control captcha-hidden">'
+                            if (captcha.length !== 0) {
+                                $('.captcha-1').replaceWith(wrapper+data.captcha+'</div>');
+                            } else {
+                                $('.captcha-2').replaceWith(wrapper+data.captcha+'</div>');
+                            }
                         }
                         if (non_field_errors) {
-                            var non_filed_alert = '<p class="alert alert-danger"></p>';
-                            {#for(err in )#}
+                            for(err in non_field_errors) {
+                                non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
+                                $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
+                            }
                         }
-                        if (field_errors) {
+                        if (field_errors && ! non_field_errors) {
+                            errors_alert = '<p class="alert alert-danger">' + data.tips + '</p>';
+                            $('.login-box-body .alert-danger').replaceWith(errors_alert);
+                            username_errors = field_errors.username;
+                            password_errors = field_errors.password;
+                            captcha_errors = field_errors.captcha;
+                            if(username_errors !== undefined) {
+                                if(username_errors.length !== 0) {
+                                    wrapper = '<div class="field-error username-error">';
+                                    errors = '';
+                                    for (err in username_errors) {
+                                        errors += wrapper + username_errors + '</div>';
+                                    }
+                                    $('.username-error').replaceWith(errors);
+                                }
+                            } else {
+                                $('.username-error').css('display', 'none');
+                            }
 
+                            if(password_errors !== undefined) {
+                                if(password_errors.length !== 0) {
+                                    wrapper = '<div class="field-error password-error">';
+                                    errors = '';
+                                    for (err in password_errors) {
+                                        errors += wrapper + password_errors + '</div>';
+                                    }
+                                    $('.password-error').replaceWith(errors);
+                                }
+                            } else {
+                                $('.password-error').css('display', 'none');
+                            }
+
+                            if(captcha_errors !== undefined) {
+                                if(captcha_errors.length !== 0) {
+                                    wrapper = '<div class="field-error captcha-error">';
+                                    errors = '';
+                                    for (err in captcha_errors) {
+                                        errors += wrapper + captcha_errors + '</div>';
+                                    }
+                                    $('.captcha-error').replaceWith(errors);
+                                }
+                            } else {
+                                $('.captcha-error').css('display', 'none');
+                            }
                         }
                         console.log(non_field_errors);
-                        console.log(field_errors);
+                        console.log(field_errors)
                     }
                 }
             });
