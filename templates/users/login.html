@@ -126,6 +126,7 @@
                                     non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
                                     $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
                                 }
+                                $('.field-error').empty();
                             }
                             if (field_errors && !non_field_errors) {
                                 var errors_alert = '<p class="alert alert-danger">' + data.tips + '</p>';
@@ -148,8 +149,8 @@
                                     }
                                 {% endfor %}
                             }
-                            {#console.log(non_field_errors);#}
-                            {#console.log(field_errors)#}
+                            console.log(non_field_errors);
+                            console.log(field_errors)
                         }
                     }
                 });
