@@ -1,4 +1,5 @@
 {% extends "adminlte/base.html" %}
+{% load common_tags %}
 {% load i18n static %}
 
 {% block body_class %}login-page{% endblock %}
@@ -78,7 +79,6 @@
                     </div>
                 </form>
             {% endblock login_form %}
-
         </div>
     </div>
 {% endblock %}
@@ -92,87 +92,66 @@
     {{ block.super }}
     <script src="{% static "js/login.js" %}"></script>
     <script>
-    $(document).ready(function(){
-        $('form').on('submit', function(e) { e.preventDefault()
-            $.ajax({
-                url: "{% url 'users:login' %}",
-                type: "post",
-                data: $('form').serialize(),
-                dataType: 'json',
-                async: true,
-                success: function (data) {
-                    if (data.success) {
-                        window.location.href="{% url 'server:overview' %}";
-                        console.log('login successfully');
-                    } else {
-                        var non_field_errors = data.non_field_errors;
-                        var field_errors = data.field_errors;
-                        var captcha = $('form').find(".cpatcha-1");
-                        if (data.captcha) {
-                            wrapper = '<div class="form-group has-feedback captcha-control captcha-hidden">'
-                            if (captcha.length !== 0) {
-                                $('.captcha-1').replaceWith(wrapper+data.captcha+'</div>');
-                            } else {
-                                $('.captcha-2').replaceWith(wrapper+data.captcha+'</div>');
-                            }
-                        }
-                        if (non_field_errors) {
-                            for(err in non_field_errors) {
-                                non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
-                                $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
-                            }
-                        }
-                        if (field_errors && ! non_field_errors) {
-                            errors_alert = '<p class="alert alert-danger">' + data.tips + '</p>';
-                            $('.login-box-body .alert-danger').replaceWith(errors_alert);
-                            username_errors = field_errors.username;
-                            password_errors = field_errors.password;
-                            captcha_errors = field_errors.captcha;
-                            if(username_errors !== undefined) {
-                                if(username_errors.length !== 0) {
-                                    wrapper = '<div class="field-error username-error">';
-                                    errors = '';
-                                    for (err in username_errors) {
-                                        errors += wrapper + username_errors + '</div>';
-                                    }
-                                    $('.username-error').replaceWith(errors);
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                e.preventDefault()
+                $.ajax({
+                    url: "{% url 'users:login' %}",
+                    type: "post",
+                    data: $('form').serialize(),
+                    dataType: 'json',
+                    async: true,
+                    success: function (data) {
+                        if (data.success) {
+                            window.location.href = "{% url 'dashboard' %}";
+                        } else {
+                            var non_field_errors = data.non_field_errors;
+                            var field_errors = data.field_errors;
+                            var captcha_1 = $('form').find(".cpatcha-1");
+                            if (data.captcha) {
+                                wrapper = '<div class="form-group has-feedback captcha-control">'
+                                if (captcha_1.length !== 0) {
+                                    $('.captcha-1').replaceWith(wrapper + data.captcha + '</div>');
+                                } else {
+                                    $('.captcha-2').replaceWith(wrapper + data.captcha + '</div>');
                                 }
-                            } else {
-                                $('.username-error').css('display', 'none');
+                                $('#id_captcha_1').val("");
                             }
 
-                            if(password_errors !== undefined) {
-                                if(password_errors.length !== 0) {
-                                    wrapper = '<div class="field-error password-error">';
-                                    errors = '';
-                                    for (err in password_errors) {
-                                        errors += wrapper + password_errors + '</div>';
-                                    }
-                                    $('.password-error').replaceWith(errors);
+                            if (non_field_errors) {
+                                for (err in non_field_errors) {
+                                    non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
+                                    $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
                                 }
-                            } else {
-                                $('.password-error').css('display', 'none');
+                            }
+                            if (field_errors && !non_field_errors) {
+                                var errors_alert = '<p class="alert alert-danger">' + data.tips + '</p>';
+                                $('.login-box-body .alert-danger').replaceWith(errors_alert);
+                                var username_errors = field_errors.username;
+                                var password_errors = field_errors.password;
+                                var captcha_errors = field_errors.captcha;
+                                {% for field in "username password captcha"|make_list2 %}
+                                    if ({{ field }}_errors !== undefined) {
+                                        if ({{ field }}_errors.length !== 0) {
+                                            var wrapper = '<div class="field-error {{ field }}-error">';
+                                            var errors = '';
+                                            for (err in {{ field }}_errors) {
+                                                errors += wrapper + {{ field }}_errors + '</div>';
+                                            }
+                                            $('.{{ field }}-error').replaceWith(errors);
+                                        }
+                                    } else {
+                                        $('.{{ field }}-error').css('display', 'none');
+                                    }
+                                {% endfor %}
                             }
 
-                            if(captcha_errors !== undefined) {
-                                if(captcha_errors.length !== 0) {
-                                    wrapper = '<div class="field-error captcha-error">';
-                                    errors = '';
-                                    for (err in captcha_errors) {
-                                        errors += wrapper + captcha_errors + '</div>';
-                                    }
-                                    $('.captcha-error').replaceWith(errors);
-                                }
-                            } else {
-                                $('.captcha-error').css('display', 'none');
-                            }
+                            console.log(non_field_errors);
+                            console.log(field_errors)
                         }
-                        console.log(non_field_errors);
-                        console.log(field_errors)
                     }
-                }
+                });
             });
         });
-    });
     </script>
 {% endblock %}
