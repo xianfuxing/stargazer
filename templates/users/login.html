@@ -62,7 +62,7 @@
                         {% if form.captcha.errors %}
                             <div class="field-error">{% for error in form.captcha.errors %}{{ error }}{% endfor %}</div>
                         {% endif %}
-                        <div class="form-group has-feedback captcha-control cpatcha-1">
+                        <div class="form-group has-feedback captcha-control captcha-1">
                             {{ form.captcha }}
                         </div>
                     {% endif %}
@@ -107,21 +107,19 @@
                         } else {
                             var non_field_errors = data.non_field_errors;
                             var field_errors = data.field_errors;
-                            var captcha1 = '<div class="form-group has-feedback captcha-control captcha-1">'
-                            var captcha2 = '<div class="form-group has-feedback captcha-control captcha-2">'
+                            var captcha_wrapper = '<div class="form-group has-feedback captcha-control';
                             if (data.captcha !== undefined) {
                                 {#console.log(data.captcha);#}
-                                var captcha_1 = $('form').find(".cpatcha-1");
+                                var captcha_1 = $('form').find(".captcha-1");
                                 if (captcha_1.length !== 0) {
                                     console.log('cp1');
-                                    $('.captcha-1').replaceWith(captcha1 + data.captcha + '</div>');
+                                    $('.captcha-1').replaceWith(captcha_wrapper + ' captcha-1">' + data.captcha + '</div>');
                                 } else {
                                     console.log('cp2');
-                                    $('.captcha-2').replaceWith(captcha2 + data.captcha + '</div>');
+                                    $('.captcha-2').replaceWith(captcha_wrapper + ' captcha-2">' + data.captcha + '</div>');
                                 }
                                 $('#id_captcha_1').val("");
                             } else {
-                                console.log('empty');
                                 $('.captcha-control').empty();
                             }
 
