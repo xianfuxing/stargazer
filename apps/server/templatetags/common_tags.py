@@ -114,3 +114,11 @@ def get_trigger_count(request):
 @register.filter(name='my_add')
 def my_add(value1, value2):
     return value1 + value2
+
+
+@register.filter(name='make_list2')
+def make_list2(value):
+    """
+    Return the value turned into a list by split.
+    """
+    return value.split()

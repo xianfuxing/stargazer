@@ -94,7 +94,7 @@
     <script>
         $(document).ready(function () {
             $('form').on('submit', function (e) {
-                e.preventDefault()
+                e.preventDefault();
                 $.ajax({
                     url: "{% url 'users:login' %}",
                     type: "post",
@@ -107,15 +107,18 @@
                         } else {
                             var non_field_errors = data.non_field_errors;
                             var field_errors = data.field_errors;
+                            // Only for get method
                             var captcha_1 = $('form').find(".cpatcha-1");
-                            if (data.captcha) {
-                                wrapper = '<div class="form-group has-feedback captcha-control">'
+                            var captcha_wrapper = '<div class="form-group has-feedback captcha-control">'
+                            if (data.captcha !== undefined) {
                                 if (captcha_1.length !== 0) {
-                                    $('.captcha-1').replaceWith(wrapper + data.captcha + '</div>');
+                                    $('.captcha-1').replaceWith(captcha_wrapper + data.captcha + '</div>');
                                 } else {
-                                    $('.captcha-2').replaceWith(wrapper + data.captcha + '</div>');
+                                    $('.captcha-2').replaceWith(captcha_wrapper + data.captcha + '</div>');
                                 }
                                 $('#id_captcha_1').val("");
+                            } else {
+                                $('.captcha-control').empty();
                             }
 
                             if (non_field_errors) {
@@ -133,10 +136,10 @@
                                 {% for field in "username password captcha"|make_list2 %}
                                     if ({{ field }}_errors !== undefined) {
                                         if ({{ field }}_errors.length !== 0) {
-                                            var wrapper = '<div class="field-error {{ field }}-error">';
+                                            var error_wrapper = '<div class="field-error {{ field }}-error">';
                                             var errors = '';
                                             for (err in {{ field }}_errors) {
-                                                errors += wrapper + {{ field }}_errors + '</div>';
+                                                errors += error_wrapper + {{ field }}_errors + '</div>';
                                             }
                                             $('.{{ field }}-error').replaceWith(errors);
                                         }
@@ -145,11 +148,19 @@
                                     }
                                 {% endfor %}
                             }
-
-                            console.log(non_field_errors);
-                            console.log(field_errors)
+                            {#console.log(non_field_errors);#}
+                            {#console.log(field_errors)#}
                         }
                     }
+                });
+                var $form = $(this);
+                var url = location.protocol + "//" + window.location.hostname + ":"
+                    + location.port + "/captcha/refresh/";
+
+                // Make the AJAX-call
+                $.getJSON(url, {}, function (json) {
+                    $form.find('input[name="captcha_0"]').val(json.key);
+                    $form.find('img.captcha').attr('src', json.image_url);
                 });
             });
         });
