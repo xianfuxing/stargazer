@@ -107,23 +107,27 @@
                         } else {
                             var non_field_errors = data.non_field_errors;
                             var field_errors = data.field_errors;
-                            // Only for get method
-                            var captcha_1 = $('form').find(".cpatcha-1");
-                            var captcha_wrapper = '<div class="form-group has-feedback captcha-control">'
+                            var captcha1 = '<div class="form-group has-feedback captcha-control captcha-1">'
+                            var captcha2 = '<div class="form-group has-feedback captcha-control captcha-2">'
                             if (data.captcha !== undefined) {
+                                {#console.log(data.captcha);#}
+                                var captcha_1 = $('form').find(".cpatcha-1");
                                 if (captcha_1.length !== 0) {
-                                    $('.captcha-1').replaceWith(captcha_wrapper + data.captcha + '</div>');
+                                    console.log('cp1');
+                                    $('.captcha-1').replaceWith(captcha1 + data.captcha + '</div>');
                                 } else {
-                                    $('.captcha-2').replaceWith(captcha_wrapper + data.captcha + '</div>');
+                                    console.log('cp2');
+                                    $('.captcha-2').replaceWith(captcha2 + data.captcha + '</div>');
                                 }
                                 $('#id_captcha_1').val("");
                             } else {
+                                console.log('empty');
                                 $('.captcha-control').empty();
                             }
 
                             if (non_field_errors) {
                                 for (err in non_field_errors) {
-                                    non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
+                                    var non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
                                     $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
                                 }
                                 $('.field-error').empty();
@@ -149,8 +153,8 @@
                                     }
                                 {% endfor %}
                             }
-                            console.log(non_field_errors);
-                            console.log(field_errors)
+                            {#console.log(non_field_errors);#}
+                            {#console.log(field_errors)#}
                         }
                     }
                 });
