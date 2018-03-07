@@ -8,16 +8,18 @@
 {% block body %}
     <div class="logout-box">
         {% block logo %}
-        <div class="login-logo">
-            <a href="{% block logo_href %}/{% endblock %}">{% block logo_text %}<b>Admin</b>LTE{% endblock %}</a>
-        </div>
+            <div class="login-logo">
+                <a href="{% block logo_href %}/{% endblock %}">{% block logo_text %}<b>Admin</b>LTE{% endblock %}</a>
+            </div>
         {% endblock %}
-        <div class= "logout-box-body">
+        <div class="logout-box-body">
             <h3 class="text-green">成功退出</h3>
             <p>感谢您今天在本站花费了一些宝贵时间。</p>
-            <button type="button" class="btn btn-default">
-                <a href="{% url 'users:login' %}">重新登录</a>
-            </button>
+            <a href="{% url 'users:login' %}">
+                <button type="button" class="btn btn-default">
+                    重新登录
+                </button>
+            </a>
         </div>
     </div>
 {% endblock %}
