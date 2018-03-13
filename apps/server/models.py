@@ -69,6 +69,7 @@ class Host(models.Model):
         ('on_demand', '按量付费')
     )
     hostname = models.CharField(max_length=50, verbose_name='主机名')
+    instance_id = models.CharField(max_length=50, null=True, blank=True, verbose_name='实例id')
     ip = models.GenericIPAddressField(verbose_name='ip地址')
     desc = models.CharField(max_length=200, default='', blank=True, verbose_name='描述')
     org = models.ForeignKey(Org, verbose_name='所在组织', on_delete='PROTECT')
