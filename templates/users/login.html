@@ -103,8 +103,8 @@
                     async: true,
                     success: function (data) {
                         if (data.success) {
-                            $('.field-error').css('display', 'none');
-                            $('.alert-danger').css('display', 'none');
+                            $('.field-error').fadeOut(200);
+                            $('.alert-danger').fadeOut(200);
                             window.location.href = "{% url 'dashboard' %}";
                         } else {
                             var non_field_errors = data.non_field_errors;
