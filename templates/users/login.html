@@ -125,16 +125,26 @@
                                 $('.captcha-control').empty();
                             }
 
+                            // non field errors display
                             if (non_field_errors) {
-                                for (err in non_field_errors) {
-                                    var non_field_errors_alert = '<p class="alert alert-danger">' + non_field_errors[err] + '</p>'
-                                    $('.login-box-body .alert-danger').replaceWith(non_field_errors_alert);
+                                for (var error in non_field_errors) {
+                                    (function (err) {
+                                        $('.login-box-body .alert-danger').fadeOut(function () {
+                                            var non_field_errors_alert = $('<p class="alert alert-danger">' + non_field_errors[err] + '</p>').hide();
+                                            $(this).replaceWith(non_field_errors_alert);
+                                            $('.alert-danger').fadeIn(300);
+                                        })
+                                    })(err)
                                 }
                                 $('.field-error').empty();
                             }
+                            // fields errors display
                             if (field_errors && !non_field_errors) {
-                                var errors_alert = '<p class="alert alert-danger">' + data.tips + '</p>';
-                                $('.login-box-body .alert-danger').replaceWith(errors_alert);
+                                $('.login-box-body .alert-danger').fadeOut(function () {
+                                    var errors_alert = $('<p class="alert alert-danger">' + data.tips + '</p>').hide();
+                                    $(this).replaceWith(errors_alert);
+                                    $('.alert-danger').fadeIn(300);
+                                });
                                 var username_errors = field_errors.username;
                                 var password_errors = field_errors.password;
                                 var captcha_errors = field_errors.captcha;
