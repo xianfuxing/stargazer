@@ -1,5 +1,6 @@
 import json
 import logging
+from dateutil import parser
 from collections import namedtuple
 from django.conf import settings
 from celery import task
@@ -7,7 +8,6 @@ from aliyunsdkcore import client
 from aliyunsdkecs.request.v20140526.DescribeInstancesRequest import DescribeInstancesRequest
 
 from .models import Host
-
 
 YJH_AK = getattr(settings, 'YJH_AK', '')
 YJH_SK = getattr(settings, 'YJH_SK', '')
@@ -34,13 +34,23 @@ def update_ecs_status():
     resp = {}
     host_list = Host.objects.all()
     request = DescribeInstancesRequest()
-    for credential in [yjh_credentials, tbus_credentials]:
-        clt = client.AcsClient(credential.AK, credential.SK, 'cn-shenzhen')
-        # Get all host from Host model
-        for host in host_list:
-            request.set_InstanceName(host.hostname)
-            response = _send_request(request, clt)
-            if response is not None:
+
+    # Get all host from Host model
+    yjh_clt = client.AcsClient(yjh_credentials.AK, yjh_credentials.SK, 'cn-shenzhen')
+    tbus_clt = client.AcsClient(tbus_credentials.AK, tbus_credentials.SK, 'cn-shenzhen')
+    for host in host_list:
+        clt = yjh_clt if host.org.code == 'YJH' else tbus_clt
+        request.set_InstanceName(host.hostname)
+        response = _send_request(request, clt)
+        if response is not None:
+            try:
                 instance_detail = response.get('Instances').get('Instance')[0]
-                resp[host.hostname] = instance_detail.get('ExpiredTime')
+                status = instance_detail.get('Status')
+                expire_time = instance_detail.get('ExpiredTime')
+                resp[host.hostname] = [status, expire_time]
+                host.status = status.lower()
+                host.expiration_date = parser.parse(expire_time)
+                host.save()
+            except IndexError:
+                raise IndexError('response is empty, please check host and org')
     return resp
