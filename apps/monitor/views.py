@@ -17,7 +17,6 @@ class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
         try:
             if host_name:
                 host_resp = zapi.host.get(filter={'host': [host_name]}, output=['hostid', 'name'], **kwargs)
-            host_resp = zapi.host.get(output=['hostid', 'name'], **kwargs)
             host_resp = host_resp[0]
         except IndexError:
             host_resp = {'hostid': '', 'name': ''}
@@ -47,9 +46,10 @@ class ItemDetailView(HostDetailView):
         item_type = item_type_map.get(item_type, '')
         # If item_tpe is exist return item_resp
         if item_type:
-            item_resp = zapi.item.get(search={'key_': item_type.format(item_key)},
-                             hostids=host_id,
-                             output=['lastclock', 'itemid', 'lastvalue'])
+            item_resp = zapi.item.get(
+                search={'key_': item_type.format(item_key)},
+                hostids=host_id,
+                output=['lastclock', 'itemid', 'lastvalue'])
         else:
             return {'itemid': '', 'lastclock': '', 'lastvalue': ''}
 
@@ -90,7 +90,7 @@ class HistoryDetailView(ItemDetailView):
                 value = round(100 - float(item['value']), 2)
                 _history_resp.append((time, value))
             _history_resp = OrderedDict(_history_resp)
-            data = [{'name': time, 'value':[time, value]} for time, value in _history_resp.items()]
+            data = [{'name': time, 'value': [time, value]} for time, value in _history_resp.items()]
             history_data = {'data': data}
 
             return JsonResponse(history_data)
