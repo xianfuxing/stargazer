@@ -63,7 +63,7 @@ class ItemDetailView(HostDetailView):
 class HistoryDetailView(ItemDetailView):
     def get(self, request, host_name, item_type, item_key):
         item_resp = self.get_item(host_name, item_type, item_key)
-        if not item_resp['itemid']:
+        if item_resp['hostid'] == '':
             return JsonResponse({'clock': '', 'value': ''})
 
         itemid = item_resp['itemid']
