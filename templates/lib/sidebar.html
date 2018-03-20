@@ -36,5 +36,15 @@
             </li>
         </ul>
     </li>
+    <li class="{% is_active_reverse request '' 'monitor:list' %}">
+        <a href="{% url 'monitor:list' %}">
+            <i class="fa fa-desktop"></i> 监控
+        </a>
+    </li>
+    <li class="">
+        <a href="">
+            <i class="fa fa-wrench"></i> 执行
+        </a>
+    </li>
 
 {% endblock nav_links %}

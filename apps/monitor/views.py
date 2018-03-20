@@ -2,7 +2,7 @@ import datetime
 from collections import OrderedDict
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 
 from .mixins.zapi import ZapiMixin
 
@@ -120,3 +120,7 @@ class TriggerListView(HostDetailView):
                 except KeyError:
                     trigger_resp[hostname] = [trigger]
         return JsonResponse(trigger_resp)
+
+
+class MonitorListView(TemplateView):
+    template_name = 'monitor/monitor_list.html'
