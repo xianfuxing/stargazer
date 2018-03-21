@@ -17,6 +17,8 @@ class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
         try:
             if host_name:
                 host_resp = zapi.host.get(filter={'host': [host_name]}, output=['hostid', 'name'], **kwargs)
+            else:
+                host_resp = zapi.host.get(output=['hostid', 'name'], **kwargs)
             host_resp = host_resp[0]
         except IndexError:
             host_resp = {'hostid': '', 'name': ''}
@@ -109,7 +111,6 @@ class TriggerListView(HostDetailView):
 
                 # Get hostname
                 try:
-                    res = self.get_host(triggerids=triggerid)
                     hostname = self.get_host(triggerids=triggerid)['name']
                 except KeyError:
                     hostname = None
