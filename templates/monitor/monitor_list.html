@@ -12,6 +12,37 @@
 
 {% block content %}
     <div class="row">
+        <div class="col-md-6">
+            <div class="trigger-list">
 
+            </div>
+        </div>
     </div>
+{% endblock %}
+
+
+{% block javascript %}
+    {{  block.super }}
+    <script>
+         $.ajax({
+             url: "{% url 'monitor:trigger' %}",
+             type: 'get',
+             dataType: 'json',
+             async: true,
+             success: function (data) {
+                 if(jQuery.isEmptyObject(data)) {
+                     $('.trigger-list').append('<p>No trigger</p>');
+                 } else {
+                     for(var host in data) {
+                         var triggers = data[host];
+                         $('.trigger-list').append('<h3>'+host+'</h3>');
+                         for(var i=0; i<triggers.length; i++) {
+                             $('.trigger-list').append('<li>'+triggers[i].description.replace(/{.*?}/, '')+'</li>');
+                         }
+                     }
+                 }
+             }
+
+         });
+    </script>
 {% endblock %}
