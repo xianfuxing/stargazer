@@ -20,9 +20,10 @@ from server.views import DashboardView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', DashboardView.as_view(), name='dashboard'),
     path('server/', include('server.urls')),
     path('monitor/', include('monitor.urls')),
     path('users/', include('users.urls')),
     path('captcha/', include('captcha.urls')),
-    path('', DashboardView.as_view(), name='dashboard'),
+    path('chat/', include('chatbot.urls')),
 ]
