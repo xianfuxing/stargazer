@@ -77,3 +77,10 @@ body {
     margin-top: 20px;
 }
 /* end server detail page styles */
+
+
+/* monitor trigger */
+.trigger-list p {
+    color: #888888;
+}
+/* end monitor trigger */
