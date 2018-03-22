@@ -23,6 +23,7 @@ urlpatterns = [
     path('', DashboardView.as_view(), name='dashboard'),
     path('server/', include('server.urls')),
     path('monitor/', include('monitor.urls')),
+    path('asset/', include('asset.urls')),
     path('users/', include('users.urls')),
     path('captcha/', include('captcha.urls')),
     path('chat/', include('chatbot.urls')),

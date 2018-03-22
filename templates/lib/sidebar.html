@@ -41,6 +41,11 @@
             <i class="fa fa-desktop"></i> 监控
         </a>
     </li>
+    <li class="{% is_active_reverse request '' 'asset:overview' %}">
+        <a href="{% url 'asset:overview' %}">
+            <i class="fa fa-cube"></i> 资产
+        </a>
+    </li>
     <li class="{% is_active_reverse request '' 'chat:chat' %}">
         <a href="{% url 'chat:chat' %}">
             <i class="fa fa-comments"></i> 小智
