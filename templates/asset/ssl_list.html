@@ -29,7 +29,7 @@
                     <td class="hostname"><a href="">{{ hostname.domain }}</a></td>
                     <td>{{ hostname.cert_type }}</td>
                     <td>{{ hostname.validity }} 个月</td>
-                    <td>{{ hostname.expiry_date|date:"y-m-d" }}</td>
+                    <td>{{ hostname.expiry_date|date:"Y-m-d H:i" }}</td>
                 </tr>
             {% endfor %}
             </tbody>
