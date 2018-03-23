@@ -3,7 +3,7 @@ body {
 }
 
 
-/* start server list table styles */
+/* start server/asset list table styles */
 .table {
     border-top: 3px solid #d2d6de;
     background-color: #ffffff;
@@ -43,7 +43,7 @@ body {
     color: #ff0000;
 }
 
-/* end server list table styles */
+/* end server/asset list table styles */
 
 
 /* start server detail page styles */

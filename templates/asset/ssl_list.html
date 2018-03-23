@@ -1,0 +1,42 @@
+{% extends 'server_base.html' %}
+
+{% block title %}SSL列表{% endblock %}
+
+{% block content_header %}
+    <section class="content-header">
+        <h1>证书列表
+            <small>List</small>
+        </h1>
+    </section>
+{% endblock %}
+
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-10">
+            <table class="table">
+            <thead>
+            <tr>
+                <th>域名</th>
+                <th>证书类型</th>
+                <th>有限期</th>
+                <th>过期时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for hostname in ssl_list %}
+                <tr>
+                    <td class="hostname"><a href="">{{ hostname.domain }}</a></td>
+                    <td>{{ hostname.cert_type }}</td>
+                    <td>{{ hostname.validity }} 个月</td>
+                    <td>{{ hostname.expiry_date|date:"y-m-d" }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <p>总共：{{ ssl_list.count }}个证书</p>
+            </tfoot>
+        </table>
+        </div>
+    </div>
+{% endblock %}

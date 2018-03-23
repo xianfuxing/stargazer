@@ -41,10 +41,21 @@
             <i class="fa fa-desktop"></i> 监控
         </a>
     </li>
-    <li class="{% is_active_reverse request '' 'asset:overview' %}">
+
+    <li class="treeview">
         <a href="{% url 'asset:overview' %}">
-            <i class="fa fa-cube"></i> 资产
+            <i class="fa fa-cube"></i> <span>资产</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
         </a>
+        <ul class="treeview-menu">
+            <li class="{% is_active_reverse request '' 'asset:ssl' %}">
+                <a href="{% url 'asset:ssl' %}">
+                    <i class="fa fa-certificate"></i> ssl
+                </a>
+            </li>
+        </ul>
     </li>
     <li class="{% is_active_reverse request '' 'chat:chat' %}">
         <a href="{% url 'chat:chat' %}">
