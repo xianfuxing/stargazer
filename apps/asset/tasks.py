@@ -25,12 +25,20 @@ def get_ssl_info(hostname):
     expiry_date = datetime.datetime.strptime(ssl_info['notAfter'], ssl_date_fmt)
     ssl_type = issuer_d['commonName']
     ssl_provider = issuer_d['organizationName']
-    return expiry_date, ssl_provider, ssl_info
+    return expiry_date, ssl_provider, ssl_type
 
 
 @task()
 def update_ssl_info():
+    status = {}
     hostname_list = SslCertificate.objects.all()
     for hostname in hostname_list:
-        print(get_ssl_info(hostname))
+        expiry_date, ssl_provider, ssl_type = get_ssl_info(hostname.domain)
+        hostname.expiry_date = expiry_date
+        hostname.issuer = ssl_provider
+        hostname.cert_type = ssl_type
+
+        hostname.save()
+        status[hostname.domain] = True
+    return status
 
