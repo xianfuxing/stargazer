@@ -3,7 +3,7 @@ from .models import SslCertificate
 
 
 class SslAdmin(admin.ModelAdmin):
-    list_display = ('domain', 'issuer', 'cert_type', 'validity', 'expiry_date')
+    list_display = ('domain', 'middleman', 'issuer', 'cert_type', 'validity', 'expiry_date')
     list_filter = ('domain', 'issuer', 'cert_type')
     ordering = ['domain']
 

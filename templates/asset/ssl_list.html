@@ -31,7 +31,7 @@
                         <td>{{ domain.cert_type }}</td>
                         <td>{{ domain.validity }} 个月</td>
                         <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
-                        <td><button class="btn btn-block btn-default btn-flat">更新</button></td>
+                        <td><button class="btn btn-block btn-default btn-flat" {% if domain.middleman != 'certbot' %}disabled="disabled" title="请移步代理商更新" {% endif %}>更新</button></td>
                     </tr>
                 {% endfor %}
                 </tbody>

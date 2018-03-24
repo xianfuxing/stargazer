@@ -3,8 +3,16 @@ from django.utils import timezone
 
 
 class SslCertificate(models.Model):
+    MIDDLEMAN_CHOICES = (
+        ('qcloud', '腾讯云'),
+        ('aliyun', '阿里云'),
+        ('qiniu', '七牛'),
+        ('certbot', 'certbot'),
+        ('other', 'other')
+    )
     domain = models.CharField(max_length=50, verbose_name='证书域名')
     description = models.CharField(max_length=100, null=True, blank=True, verbose_name='描述')
+    middleman = models.CharField(max_length=50, default='', choices=MIDDLEMAN_CHOICES, verbose_name='代理商')
     issuer = models.CharField(max_length=50, null=True, blank=True, verbose_name='颁发商')
     cert_type = models.CharField(max_length=50, null=True, blank=True, verbose_name='证书类型')
     validity = models.PositiveIntegerField(verbose_name='有效期')
