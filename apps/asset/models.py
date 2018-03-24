@@ -14,5 +14,15 @@ class SslCertificate(models.Model):
         verbose_name = '证书信息'
         verbose_name_plural = verbose_name
 
+    @property
+    def will_be_expired(self):
+        timedelta = self.expiry_date - timezone.now()
+        return timezone.timedelta(0) <= timedelta <= timezone.timedelta(days=14)
+
+    @property
+    def is_expired(self):
+        timedelta = self.expiry_date - timezone.now()
+        return timedelta < timezone.timedelta(0)
+
     def __str__(self):
         return self.domain

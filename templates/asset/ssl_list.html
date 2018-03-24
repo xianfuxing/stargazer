@@ -24,12 +24,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                {% for hostname in ssl_list %}
+                {% for domain in ssl_list %}
                     <tr>
-                        <td class="hostname"><a href="">{{ hostname.domain }}</a></td>
-                        <td>{{ hostname.cert_type }}</td>
-                        <td>{{ hostname.validity }} 个月</td>
-                        <td>{{ hostname.expiry_date|date:"Y-m-d H:i" }}</td>
+                        <td class="hostname"><a href="">{{ domain.domain }}</a></td>
+                        <td>{{ domain.cert_type }}</td>
+                        <td>{{ domain.validity }} 个月</td>
+                        <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
