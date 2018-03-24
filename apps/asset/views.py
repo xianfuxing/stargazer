@@ -1,12 +1,13 @@
 from django.views.generic import TemplateView, ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import SslCertificate
 
 
-class AssetOverviewView(TemplateView):
+class AssetOverviewView(LoginRequiredMixin, TemplateView):
     template_name = 'asset/overview.html'
 
 
-class SslListView(ListView):
+class SslListView(LoginRequiredMixin, ListView):
     model = SslCertificate
     context_object_name = 'ssl_list'
     template_name = 'asset/ssl_list.html'

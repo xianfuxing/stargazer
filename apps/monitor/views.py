@@ -123,5 +123,5 @@ class TriggerListView(HostDetailView):
         return JsonResponse(trigger_resp)
 
 
-class MonitorListView(TemplateView):
+class MonitorListView(LoginRequiredMixin, TemplateView):
     template_name = 'monitor/monitor_list.html'
