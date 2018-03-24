@@ -5,7 +5,7 @@
 {% block content_header %}
     <section class="content-header">
         <h1>证书列表
-            <small>List</small>
+            <small>SSL</small>
         </h1>
     </section>
 {% endblock %}
@@ -15,28 +15,57 @@
     <div class="row">
         <div class="col-md-10">
             <table class="table">
-            <thead>
-            <tr>
-                <th>域名</th>
-                <th>证书类型</th>
-                <th>有限期</th>
-                <th>过期时间</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for hostname in ssl_list %}
+                <thead>
                 <tr>
-                    <td class="hostname"><a href="">{{ hostname.domain }}</a></td>
-                    <td>{{ hostname.cert_type }}</td>
-                    <td>{{ hostname.validity }} 个月</td>
-                    <td>{{ hostname.expiry_date|date:"Y-m-d H:i" }}</td>
+                    <th>域名</th>
+                    <th>证书类型</th>
+                    <th>有限期</th>
+                    <th>过期时间</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-            <tfoot>
-            <p>总共：{{ ssl_list.count }}个证书</p>
-            </tfoot>
-        </table>
+                </thead>
+                <tbody>
+                {% for hostname in ssl_list %}
+                    <tr>
+                        <td class="hostname"><a href="">{{ hostname.domain }}</a></td>
+                        <td>{{ hostname.cert_type }}</td>
+                        <td>{{ hostname.validity }} 个月</td>
+                        <td>{{ hostname.expiry_date|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <p>总共：{{ ssl_count }}个证书</p>
+                </tfoot>
+            </table>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="?{{ page_obj.previous_page_number.querystring }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for page in page_obj.pages %}
+                        {% if page %}
+                            {% ifequal page page_obj.number %}
+                                <li class="active"><a>{{ page }}</a></li>
+                            {% else %}
+                                <li><a href="?{{ page.querystring }}">{{ page }}</a></li>
+                            {% endifequal %}
+                        {% else %}
+                            ...
+                        {% endif %}
+                    {% endfor %}
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="?{{ page_obj.next_page_number.querystring }}" aria-label="Previous">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </div>
     </div>
 {% endblock %}
