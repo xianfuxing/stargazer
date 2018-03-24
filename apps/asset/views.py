@@ -1,7 +1,11 @@
+import requests
 from django.shortcuts import Http404, redirect
-from django.views.generic import TemplateView, ListView
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
+from django.views.generic import View, TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import SslCertificate
+from .tasks import get_ssl_info
 
 from pure_pagination.mixins import PaginationMixin
 
@@ -44,3 +48,30 @@ class SslListView(LoginRequiredMixin, PaginationMixin, ListView):
         ctx['ssl_count'] = ssl_count
 
         return ctx
+
+
+class SlsRenewView(View):
+    def get(self, request, *args, **kwargs):
+        request = self.request
+        domain = request.GET.get('domain', '')
+        return JsonResponse({'domain': domain, 'msg': ''})
+
+    def post(self, request, *args, **kwargs):
+        salt_url = getattr(settings, 'SALT_URL', '')
+        salt_username = getattr(settings, 'SALT_USER', '')
+        salt_password = getattr(settings, 'SALT_PASSWORD', '')
+        request = self.request
+        domain = request.POST.get('domain', request.GET.get('domain'))
+        if domain:
+            session = requests.Session()
+            session.post(salt_url+'login', json={'username': salt_username,
+                                                               'password': salt_password,
+                                                               'eauth': 'pam'
+                                                               }, verify=False)
+            resp = session.post(salt_url, json=[{'client': 'local',
+                                          'tgt': 'new-aiyou',
+                                          'fun': 'state.sls',
+                                          'arg': 'ssl.renew'}], verify=False)
+            data = resp.content
+            return HttpResponse(data, content_type='application/json')
+        return JsonResponse({'domain': '', 'msg': ''})

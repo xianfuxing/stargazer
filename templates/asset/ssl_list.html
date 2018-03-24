@@ -19,14 +19,14 @@
                 <tr>
                     <th>域名</th>
                     <th>证书类型</th>
-                    <th>有限期</th>
+                    <th>有效期</th>
                     <th>过期时间</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for domain in ssl_list %}
                     <tr>
-                        <td class="hostname"><a href="">{{ domain.domain }}</a></td>
+                        <td class="hostname"><a href="https://{{ domain.domain }}" target="_blank">{{ domain.domain }}</a></td>
                         <td>{{ domain.cert_type }}</td>
                         <td>{{ domain.validity }} 个月</td>
                         <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
