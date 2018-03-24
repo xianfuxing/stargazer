@@ -15,7 +15,7 @@ class SslListView(LoginRequiredMixin, PaginationMixin, ListView):
     context_object_name = 'ssl_list'
     template_name = 'asset/ssl_list.html'
 
-    paginate_by = 5
+    paginate_by = 6
     object = SslCertificate
 
     def get(self, request, *args, **kwargs):
