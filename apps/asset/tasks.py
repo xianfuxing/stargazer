@@ -2,6 +2,7 @@ import socket
 import ssl
 import datetime
 from celery import task
+from dateutil import parser
 from .models import SslCertificate
 
 
@@ -22,7 +23,8 @@ def get_ssl_info(hostname):
     issuer_d = {x:y for x, y in issuer}
 
     # parse the string from the certificate into a Python datetime object
-    expiry_date = datetime.datetime.strptime(ssl_info['notAfter'], ssl_date_fmt)
+    # expiry_date = datetime.datetime.strptime(ssl_info['notAfter'], ssl_date_fmt)
+    expiry_date = parser.parse(ssl_info['notAfter'])
     ssl_type = issuer_d['commonName']
     ssl_provider = issuer_d['organizationName']
     return expiry_date, ssl_provider, ssl_type
