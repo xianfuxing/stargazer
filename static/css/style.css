@@ -84,3 +84,10 @@ body {
     color: #888888;
 }
 /* end monitor trigger */
+
+/* start ssl button styles */
+.ssl-list button {
+    font-size: 0.8em;
+    width: 60%;
+}
+/* end ssl button styles */

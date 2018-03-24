@@ -14,13 +14,14 @@
 {% block content %}
     <div class="row">
         <div class="col-md-10">
-            <table class="table">
+            <table class="table ssl-list">
                 <thead>
                 <tr>
                     <th>域名</th>
                     <th>证书类型</th>
                     <th>有效期</th>
                     <th>过期时间</th>
+                    <th>更新证书</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,7 @@
                         <td>{{ domain.cert_type }}</td>
                         <td>{{ domain.validity }} 个月</td>
                         <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
+                        <td><button class="btn btn-block btn-default btn-flat">更新</button></td>
                     </tr>
                 {% endfor %}
                 </tbody>
