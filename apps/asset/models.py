@@ -17,6 +17,7 @@ class SslCertificate(models.Model):
     cert_type = models.CharField(max_length=50, null=True, blank=True, verbose_name='证书类型')
     validity = models.PositiveIntegerField(verbose_name='有效期')
     expiry_date = models.DateTimeField(default=timezone.now, verbose_name='到期时间')
+    host = models.ForeignKey('server.Host', on_delete='PROTECT', verbose_name='所在服务器')
 
     class Meta:
         verbose_name = '证书信息'

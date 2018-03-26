@@ -1,11 +1,13 @@
 import requests
+import json
 from django.shortcuts import Http404, redirect
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.conf import settings
 from django.views.generic import View, TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import SslCertificate
 from .tasks import get_ssl_info
+from .utils import get_salt_resp_stdout
 
 from pure_pagination.mixins import PaginationMixin
 
@@ -50,7 +52,7 @@ class SslListView(LoginRequiredMixin, PaginationMixin, ListView):
         return ctx
 
 
-class SlsRenewView(View):
+class SlsRenewView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         request = self.request
         domain = request.GET.get('domain', '')
@@ -63,15 +65,32 @@ class SlsRenewView(View):
         request = self.request
         domain = request.POST.get('domain', request.GET.get('domain'))
         if domain:
+            try:
+                ssl = SslCertificate.objects.get(domain=domain)
+            except SslCertificate.DoesNotExist:
+                return JsonResponse({'domain': domain, 'msg': 'domain is not existed'})
+            # salt-api authenticate
             session = requests.Session()
-            session.post(salt_url+'login', json={'username': salt_username,
-                                                               'password': salt_password,
-                                                               'eauth': 'pam'
-                                                               }, verify=False)
+            session.post(salt_url + 'login', json={'username': salt_username,
+                                                   'password': salt_password,
+                                                   'eauth': 'pam'
+                                                   }, verify=False)
+            # send renew request
             resp = session.post(salt_url, json=[{'client': 'local',
-                                          'tgt': 'new-aiyou',
-                                          'fun': 'state.sls',
-                                          'arg': 'ssl.renew'}], verify=False)
-            data = resp.content
-            return HttpResponse(data, content_type='application/json')
-        return JsonResponse({'domain': '', 'msg': ''})
+                                                 'tgt': ssl.host.hostname,
+                                                 'fun': 'state.sls',
+                                                 'arg': 'ssl.renew',
+                                                 'kwarg': {'pillar': {'domain': domain}}}], verify=False)
+            data = json.loads(resp.text)
+            try:
+                resp = get_salt_resp_stdout(data['return'][0])
+                stdout, stderr, result = resp['stdout'], resp['stderr'], resp['result']
+            except ValueError:
+                return JsonResponse({'domain': domain, 'msg': 'stdout or stderr is empty'})
+            if result:
+                msg = 'not due' if 'not due' in stdout else 'renewed'
+            else:
+                if stderr:
+                    msg = 'No certificate found' if 'No certificate found' in stderr else 'unknown error'
+            return JsonResponse({'domain': domain, 'msg': msg})
+        return JsonResponse({'domain': '', 'msg': 'domain is none'})
