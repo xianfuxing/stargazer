@@ -27,11 +27,17 @@
                 <tbody>
                 {% for domain in ssl_list %}
                     <tr>
-                        <td class="hostname"><a href="https://{{ domain.domain }}" target="_blank">{{ domain.domain }}</a></td>
+                        <td class="hostname"><a href="https://{{ domain.domain }}"
+                                                target="_blank">{{ domain.domain }}</a></td>
                         <td>{{ domain.cert_type }}</td>
                         <td>{{ domain.validity }} 个月</td>
                         <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
-                        <td><button class="btn btn-block btn-default btn-flat" {% if domain.middleman != 'certbot' %}disabled="disabled" title="请移步代理商更新" {% endif %}>更新</button></td>
+                        <td>
+                            <button type="button" class="btn btn-block btn-default btn-flat" data-loading-text="..."
+                                    {% if domain.middleman != 'certbot' %}disabled="disabled"
+                                    title="请移步代理商更新" {% endif %}>更新
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -70,4 +76,37 @@
             </nav>
         </div>
     </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ block.super }}
+    <script>
+        $(document).ready(function () {
+            $("button").click(function () {
+                var btn = $(this).button('loading');
+                var domain = $(this).parents('tr').find('.hostname').text();
+                $.ajaxSetup({
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'}
+                });
+                $(document).ajaxStart(function () {
+                   console.log('renew start');
+                });
+                $(document).ajaxStop(function () {
+                   console.log('renew completed');
+                });
+                $.ajax({
+                    url: "{% url 'asset:renew' %}",
+                    type: "POST",
+                    dataType: 'json',
+                    data: {
+                        domain: domain
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        btn.button('reset');
+                    }
+                });
+            });
+        });
+    </script>
 {% endblock %}
