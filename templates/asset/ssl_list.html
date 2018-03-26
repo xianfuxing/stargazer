@@ -13,7 +13,7 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-md-10">
+        <div class="col-md-10 ssl-wrapper">
             <table class="table ssl-list">
                 <thead>
                 <tr>
@@ -103,6 +103,14 @@
                     },
                     success: function (data) {
                         console.log(data);
+                        var msg = data.msg;
+                        if(msg === 'not due') {
+                            var message = '<div class="alert alert-info alert-dismissible" role="alert" > <strong>'+domain+'</strong> 域名未到期，暂无法更新</div>'
+                            $('.ssl-wrapper').prepend(message);
+                        } else if(msg === 'renewed') {
+                            message = '<div class="alert alert-success alert-dismissible" role="alert"> <strong>'+domain+'</strong> 域名已更新</div>'
+                            $('.ssl-wrapper').prepend(message);
+                        }
                         btn.button('reset');
                     }
                 });
