@@ -104,11 +104,14 @@
                     success: function (data) {
                         console.log(data);
                         var msg = data.msg;
+                        var alt_btn = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
                         if(msg === 'not due') {
-                            var message = '<div class="alert alert-info alert-dismissible" role="alert" > <strong>'+domain+'</strong> 域名未到期，暂无法更新</div>'
+                            var message = '<div class="alert alert-info alert-dismissible" role="alert" > ' +
+                                alt_btn +'<strong>'+domain+'</strong> 域名未到期，暂无法更新</div>';
                             $('.ssl-wrapper').prepend(message);
                         } else if(msg === 'renewed') {
-                            message = '<div class="alert alert-success alert-dismissible" role="alert"> <strong>'+domain+'</strong> 域名已更新</div>'
+                            message = '<div class="alert alert-success alert-dismissible" role="alert">' +
+                                alt_btn +' <strong>'+domain+'</strong> 域名已更新</div>';
                             $('.ssl-wrapper').prepend(message);
                         }
                         btn.button('reset');

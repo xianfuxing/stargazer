@@ -1,5 +1,6 @@
 import requests
 import json
+import urllib3
 from django.shortcuts import Http404, redirect
 from django.http import JsonResponse
 from django.conf import settings
@@ -71,6 +72,7 @@ class SlsRenewView(LoginRequiredMixin, View):
                 return JsonResponse({'domain': domain, 'msg': 'domain is not existed'})
             # salt-api authenticate
             session = requests.Session()
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             session.post(salt_url + 'login', json={'username': salt_username,
                                                    'password': salt_password,
                                                    'eauth': 'pam'
@@ -85,8 +87,8 @@ class SlsRenewView(LoginRequiredMixin, View):
             try:
                 resp = get_salt_resp_stdout(data['return'][0])
                 stdout, stderr, result = resp['stdout'], resp['stderr'], resp['result']
-            except ValueError:
-                return JsonResponse({'domain': domain, 'msg': 'stdout or stderr is empty'})
+            except KeyError:
+                return JsonResponse({'domain': domain, 'msg': 'result not found'})
             if result:
                 msg = 'not due' if 'not due' in stdout else 'renewed'
             else:
