@@ -61,12 +61,12 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
 
         if due == 'soon':
             if query_set:
-                return [host for host in query_set if host.will_be_expired]
+                query_set = Host.to_expire_objects.all()
         elif due == 'yes':
             if query_set:
-                return [host for host in query_set if host.is_expired]
+                query_set = Host.is_expired_objects.all()
         else:
-            return query_set
+            return query_set.order_by('hostname')
 
         return query_set
 

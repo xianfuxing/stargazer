@@ -58,6 +58,23 @@ class HostHardware(models.Model):
         return self.version
 
 
+class HostToExpireManager(models.Manager):
+    def get_queryset(self):
+        now = timezone.now()
+        timedelta = now + timezone.timedelta(days=30)
+        return super().get_queryset().filter(
+            expiration_date__gte=now,
+            expiration_date__lte=timedelta)
+
+
+class HostIsExpiredManager(models.Manager):
+    def get_queryset(self):
+        now = timezone.now()
+        return super().get_queryset().filter(
+            expiration_date__lte=now,
+        )
+
+
 class Host(models.Model):
     STATUS_CHOICES = (
         ('running', '运行中'),
@@ -83,6 +100,9 @@ class Host(models.Model):
     status = models.CharField(default='running', max_length=10, choices=STATUS_CHOICES, verbose_name='运行状态')
     create_time = models.DateTimeField(default=timezone.now, verbose_name='创建时间')
     add_time = models.DateTimeField(auto_now_add=True, verbose_name='添加时间')
+    objects = models.Manager()
+    to_expire_objects = HostToExpireManager()
+    is_expired_objects = HostIsExpiredManager()
 
     class Meta:
         verbose_name = '主机'
