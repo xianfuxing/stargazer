@@ -72,6 +72,7 @@ class SlsRenewView(LoginRequiredMixin, View):
                 return JsonResponse({'domain': domain, 'msg': 'domain is not existed'})
             # salt-api authenticate
             session = requests.Session()
+            # disable ssl check warning
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
             session.post(salt_url + 'login', json={'username': salt_username,
                                                    'password': salt_password,
@@ -85,7 +86,8 @@ class SlsRenewView(LoginRequiredMixin, View):
                                                  'kwarg': {'pillar': {'domain': domain}}}], verify=False)
             data = json.loads(resp.text)
             try:
-                resp = get_salt_resp_stdout(data['return'][0])
+                data = data['return'][0]
+                resp = get_salt_resp_stdout(data)
                 stdout, stderr, result = resp['stdout'], resp['stderr'], resp['result']
             except KeyError:
                 return JsonResponse({'domain': domain, 'msg': 'result not found'})
