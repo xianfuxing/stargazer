@@ -1,5 +1,8 @@
 {% extends 'server_base.html' %}
+{% load staticfiles %}
 {% load common_tags %}
+
+
 {% block title %}监控详情{% endblock %}
 
 {% block content_header %}
@@ -12,11 +15,14 @@
 
 {% block content %}
     <div class="row">
+        <div class="loader"></div>
         <div class="col-md-6">
             <div class="trigger-list">
                 {% get_trigger_count request as trigger_count %}
                 {% if status_count > 0 or trigger_count > 0 %}
                     <p>最近{{ trigger_count }}个问题</p>
+                {% else %}
+                    <p>没发现告警</p>
                 {% endif %}
             </div>
         </div>
@@ -25,27 +31,63 @@
 
 
 {% block javascript %}
-    {{  block.super }}
+    {{ block.super }}
+    <script src="https://cdn.bootcss.com/spin.js/2.3.2/spin.min.js"></script>
     <script>
-         $.ajax({
-             url: "{% url 'monitor:trigger' %}",
-             type: 'get',
-             dataType: 'json',
-             async: true,
-             success: function (data) {
-                 if(jQuery.isEmptyObject(data)) {
-                     $('.trigger-list').append('<div class="callout callout-info"><p>没有警告</p></div>');
-                 } else {
-                     for(var host in data) {
-                         var triggers = data[host];
-                         $('.trigger-list').append('<div class="callout callout-warning '+ host +'"><h4>'+host+'</h4></div>');
-                         for(var i=0; i<triggers.length; i++) {
-                             $('.'+host).append('<p>- '+triggers[i].description.replace(/{.*?}/, '')+'</p>');
-                         }
-                     }
-                 }
-             }
+        var opts = {
+            lines: 11, // The number of lines to draw
+            length: 38, // The length of each line
+            width: 17, // The line thickness
+            radius: 45, // The radius of the inner circle
+            scale: 0.5, // Scales overall size of the spinner
+            corners: 1, // Corner roundness (0..1)
+            color: '#000000', // CSS color or array of colors
+            fadeColor: 'transparent', // CSS color or array of colors
+            opacity: 0.25, // Opacity of the lines
+            rotate: 0, // The rotation offset
+            direction: 1, // 1: clockwise, -1: counterclockwise
+            speed: 1, // Rounds per second
+            trail: 60, // Afterglow percentage
+            fps: 20, // Frames per second when using setTimeout() as a fallback in IE 9
+            zIndex: 2e9, // The z-index (defaults to 2000000000)
+            className: 'spinner', // The CSS class to assign to the spinner
+            top: '20%', // Top position relative to parent
+            left: '50%', // Left position relative to parent
+            shadow: false, // Box-shadow for the lines
+            position: 'absolute' // Element positioning
+        };
 
-         });
+        var target = document.getElementById('foo');
+        var spinner = new Spinner(opts).spin(target);
+        $.ajax({
+            url: "{% url 'monitor:trigger' %}",
+            type: 'get',
+            dataType: 'json',
+            async: true,
+            beforeSend: function () {
+                $('.loader').text('');
+                var target = $('.loader').get(0);
+                spinner.spin(target);
+            },
+            success: function (data) {
+                if (jQuery.isEmptyObject(data)) {
+                    $('.trigger-list').append('<div class="callout callout-info"><p>没有警告</p></div>');
+                } else {
+                    for (var host in data) {
+                        var triggers = data[host];
+                        $('.trigger-list').append('<div class="callout callout-warning ' + host + '"><h4>' + host + '</h4></div>');
+                        for (var i = 0; i < triggers.length; i++) {
+                            $('.' + host).append('<p>- ' + triggers[i].description.replace(/{.*?}/, '') + '</p>');
+                        }
+                    }
+                }
+                spinner.spin();
+            }
+        });
     </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" type="text/css" href="{% static "css/loader.css" %}">
 {% endblock %}
