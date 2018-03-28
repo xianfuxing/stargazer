@@ -82,6 +82,10 @@
                     }
                 }
                 spinner.spin();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                spinner.spin(target);
+                alert('获取Trigger失败，请联系管理员')
             }
         });
     </script>

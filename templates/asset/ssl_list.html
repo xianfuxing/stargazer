@@ -115,6 +115,9 @@
                             $('.ssl-wrapper').prepend(message);
                         }
                         btn.button('reset');
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('更新失败，请联系管理员')
                     }
                 });
             });
