@@ -31,7 +31,7 @@
                                                 target="_blank">{{ domain.domain }}</a></td>
                         <td>{{ domain.cert_type }}</td>
                         <td>{{ domain.validity }} 个月</td>
-                        <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.is_expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
+                        <td class="{% if domain.will_be_expired %}text-yellow{% elif domain.expired %}text-danger{% endif %}">{{ domain.expiry_date|date:"Y-m-d H:i" }}</td>
                         <td>
                             <button type="button" class="btn btn-block btn-default btn-flat" data-loading-text="..."
                                     {% if domain.middleman != 'certbot' %}disabled="disabled"

@@ -2,6 +2,23 @@ from django.db import models
 from django.utils import timezone
 
 
+class SslWillSoonExpireManager(models.Manager):
+    def get_queryset(self):
+        now = timezone.now()
+        timedelta = now + timezone.timedelta(days=14)
+        return super().get_queryset().filter(
+            expiry_date__gte=now,
+            expiry_date__lte=timedelta)
+
+
+class SslIsExpiredManager(models.Manager):
+    def get_queryset(self):
+        now = timezone.now()
+        return super().get_queryset().filter(
+            expiry_date__lte=now,
+            )
+
+
 class SslCertificate(models.Model):
     MIDDLEMAN_CHOICES = (
         ('qcloud', '腾讯云'),
@@ -18,6 +35,9 @@ class SslCertificate(models.Model):
     validity = models.PositiveIntegerField(verbose_name='有效期')
     expiry_date = models.DateTimeField(default=timezone.now, verbose_name='到期时间')
     host = models.ForeignKey('server.Host', on_delete='PROTECT', verbose_name='所在服务器')
+    objects = models.Manager()
+    to_expire = SslWillSoonExpireManager()
+    is_expired = SslIsExpiredManager()
 
     class Meta:
         verbose_name = '证书信息'
@@ -29,7 +49,7 @@ class SslCertificate(models.Model):
         return timezone.timedelta(0) <= timedelta <= timezone.timedelta(days=14)
 
     @property
-    def is_expired(self):
+    def expired(self):
         timedelta = self.expiry_date - timezone.now()
         return timedelta < timezone.timedelta(0)
 

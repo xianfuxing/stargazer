@@ -43,6 +43,12 @@ class SslListView(LoginRequiredMixin, PaginationMixin, ListView):
 
     def get_queryset(self):
         query_set = super().get_queryset()
+        status = self.request.GET.get('status', '')
+        if status == 'danger':
+            if query_set:
+                to_expire = SslCertificate.to_expire.all()
+                is_expired = SslCertificate.is_expired.all()
+                query_set = to_expire.union(is_expired)
         return query_set.order_by('domain')
 
     def get_context_data(self, **kwargs):
