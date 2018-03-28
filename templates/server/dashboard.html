@@ -7,8 +7,9 @@
 
 {% block content %}
     <div class="row">
-    {% get_server_status_count as status_count %}
-    {% get_trigger_count request as trigger_count %}
+        {% get_server_status_count as status_count %}
+        {% get_trigger_count request as trigger_count %}
+        {% get_abnormal_ssl_count as ab_ssl_count %}
         <div class="col-lg-3 col-xs-6">
             <div class="small-box {% if trigger_count > 0 %}bg-red{% else %}bg-green{% endif %}">
                 <div class="inner">
@@ -24,7 +25,7 @@
 
         </div>
         <div class="col-lg-3 col-xs-6">
-            <div class="small-box {% if status_count > 0%}bg-yellow{% else %}bg-aqua{% endif %}">
+            <div class="small-box {% if status_count > 0 %}bg-yellow{% else %}bg-aqua{% endif %}">
                 <div class="inner">
                     <h3>{{ status_count }}</h3>
                     <p>服务器状态</p>
@@ -36,34 +37,18 @@
                         class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-
+        <div class="col-lg-3 col-xs-6">
+            <div class="small-box {% if status_count > 0 %}bg-yellow{% else %}bg-aqua{% endif %}">
+                <div class="inner">
+                    <h3>{{ ab_ssl_count }}</h3>
+                    <p>证书健康</p>
+                </div>
+                <div class="icon">
+                    <i class="ion ion-locked"></i>
+                </div>
+                <a href="{% url 'asset:ssl' %}" class="small-box-footer">详情 <i
+                        class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
     </div>
 {% endblock content %}
-
-{% block javascript %}
-    {{ block.super }}
-{#    <script>#}
-{#        var trigger_obj;#}
-{#        var count = 0;#}
-{#        $.ajax({#}
-{#            url: "{% url 'monitor:trigger' %}",#}
-{#            type: 'get',#}
-{#            dataType: 'json',#}
-{#            async: true,#}
-{#            success: function (data) {#}
-{#                if (data) {#}
-{#                    trigger_obj = data;#}
-{#                    for (k in trigger_obj) {#}
-{#                        count += trigger_obj[k].length;#}
-{#                    }#}
-{#                    if (count) {#}
-{#                        $('.server-trigger').removeClass('bg-green').addClass('bg-red');#}
-{#                    }#}
-{#                } else {#}
-{#                    alert("Error: trigger is not found");#}
-{#                }#}
-{#                $('.server-trigger .inner h3').text(count);#}
-{#            },#}
-{#        });#}
-{#    </script>#}
-{% endblock javascript %}

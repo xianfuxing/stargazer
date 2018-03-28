@@ -5,6 +5,8 @@ from django.db.models import Q
 from django.core.cache import cache
 
 from server.models import Host
+from asset.models import SslCertificate
+
 
 try:
     # Django 2.0 or later
@@ -109,6 +111,16 @@ def get_trigger_count(request):
         print(e)
     cache.set('trigger_count', trigger_count, 300)
     return trigger_count
+
+
+@register.simple_tag()
+def get_abnormal_ssl_count():
+    ab_ssl_count = 0
+    ssl_list = SslCertificate.objects.all()
+    for ssl in ssl_list:
+        if ssl.will_be_expired or ssl.is_expired:
+            ab_ssl_count += 1
+    return ab_ssl_count
 
 
 @register.filter(name='my_add')
