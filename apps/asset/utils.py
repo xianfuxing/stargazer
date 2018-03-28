@@ -6,9 +6,7 @@ def get_salt_resp_stdout(data):
     for k, v in data.items():
         if type(v) is dict:
             # yield (k, v)
-            v = get_salt_resp_stdout(v)
-            if v:
-                return v
+            get_salt_resp_stdout(v)
         else:
             if k == 'stdout':
                 resp[k] = v
