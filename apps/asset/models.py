@@ -36,8 +36,8 @@ class SslCertificate(models.Model):
     expiry_date = models.DateTimeField(default=timezone.now, verbose_name='到期时间')
     host = models.ForeignKey('server.Host', on_delete='PROTECT', verbose_name='所在服务器')
     objects = models.Manager()
-    to_expire = SslWillSoonExpireManager()
-    is_expired = SslIsExpiredManager()
+    to_expire_objects = SslWillSoonExpireManager()
+    is_expired_objects = SslIsExpiredManager()
 
     class Meta:
         verbose_name = '证书信息'
@@ -49,7 +49,7 @@ class SslCertificate(models.Model):
         return timezone.timedelta(0) <= timedelta <= timezone.timedelta(days=14)
 
     @property
-    def expired(self):
+    def is_expired(self):
         timedelta = self.expiry_date - timezone.now()
         return timedelta < timezone.timedelta(0)
 
