@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 
 
-class SslWillSoonExpireManager(models.Manager):
+class SslToExpireManager(models.Manager):
     def get_queryset(self):
         now = timezone.now()
         timedelta = now + timezone.timedelta(days=14)
@@ -36,7 +36,7 @@ class SslCertificate(models.Model):
     expiry_date = models.DateTimeField(default=timezone.now, verbose_name='到期时间')
     host = models.ForeignKey('server.Host', on_delete='PROTECT', verbose_name='所在服务器')
     objects = models.Manager()
-    to_expire_objects = SslWillSoonExpireManager()
+    to_expire_objects = SslToExpireManager()
     is_expired_objects = SslIsExpiredManager()
 
     class Meta:
