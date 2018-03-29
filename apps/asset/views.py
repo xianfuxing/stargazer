@@ -1,9 +1,9 @@
 import requests
 import json
 import urllib3
+from . import settings_secret
 from django.shortcuts import Http404, redirect
 from django.http import JsonResponse
-from django.conf import settings
 from django.views.generic import View, TemplateView, ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import SslCertificate
@@ -66,9 +66,9 @@ class SlsRenewView(LoginRequiredMixin, View):
         return JsonResponse({'domain': domain, 'msg': ''})
 
     def post(self, request, *args, **kwargs):
-        salt_url = getattr(settings, 'SALT_URL', '')
-        salt_username = getattr(settings, 'SALT_USER', '')
-        salt_password = getattr(settings, 'SALT_PASSWORD', '')
+        salt_url = getattr(settings_secret, 'SALT_URL', '')
+        salt_username = getattr(settings_secret, 'SALT_USER', '')
+        salt_password = getattr(settings_secret, 'SALT_PASSWORD', '')
         request = self.request
         domain = request.POST.get('domain', request.GET.get('domain'))
         if domain:

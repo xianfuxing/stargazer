@@ -2,17 +2,17 @@ import json
 import logging
 from dateutil import parser
 from collections import namedtuple
-from django.conf import settings
+from . import settings_secret
 from celery import task
 from aliyunsdkcore import client
 from aliyunsdkecs.request.v20140526.DescribeInstancesRequest import DescribeInstancesRequest
 
 from .models import Host
 
-YJH_AK = getattr(settings, 'YJH_AK', '')
-YJH_SK = getattr(settings, 'YJH_SK', '')
-TBUS_AK = getattr(settings, 'TBUS_AK', '')
-TBUS_SK = getattr(settings, 'TBUS_SK', '')
+YJH_AK = getattr(settings_secret, 'YJH_AK', '')
+YJH_SK = getattr(settings_secret, 'YJH_SK', '')
+TBUS_AK = getattr(settings_secret, 'TBUS_AK', '')
+TBUS_SK = getattr(settings_secret, 'TBUS_SK', '')
 CREDENTIALS = namedtuple('CREDENTIALS', ['AK', 'SK'])
 yjh_credentials = CREDENTIALS(YJH_AK, YJH_SK)
 tbus_credentials = CREDENTIALS(TBUS_AK, TBUS_SK)

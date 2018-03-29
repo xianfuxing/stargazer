@@ -1,4 +1,4 @@
-from django.conf import settings
+from .. import settings_secret
 from django.core.cache import cache
 from pyzabbix import ZabbixAPI
 
@@ -13,9 +13,9 @@ class ZapiMixin(object):
         if zapi:
             return zapi
 
-        ZAPI_URL = getattr(settings, 'ZAPI_URL', '')
-        ZAPI_USER = getattr(settings, 'ZAPI_USER', '')
-        ZAPI_PASSWORD = getattr(settings, 'ZAPI_PASSWORD', '')
+        ZAPI_URL = getattr(settings_secret, 'ZAPI_URL', '')
+        ZAPI_USER = getattr(settings_secret, 'ZAPI_USER', '')
+        ZAPI_PASSWORD = getattr(settings_secret, 'ZAPI_PASSWORD', '')
         zapi = ZabbixAPI(ZAPI_URL)
         zapi.login(ZAPI_USER, ZAPI_PASSWORD)
 
