@@ -171,19 +171,3 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1'),
     },
 }
-
-# Zabbix settings
-ZAPI_URL = ''
-ZAPI_USER = ''
-ZAPI_PASSWORD = ''
-
-# Aliyun AK/SK settings
-YJH_AK = ''
-YJH_SK = ''
-TBUS_AK = ''
-TBUS_SK = ''
-
-# SALT API
-SALT_URL = ''
-SALT_USER = ''
-SALT_PASSWORD = ''
