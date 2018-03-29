@@ -94,6 +94,7 @@
                 $(document).ajaxStop(function () {
                    console.log('renew completed');
                 });
+                $("." + domain).fadeOut(2000);
                 $.ajax({
                     url: "{% url 'asset:renew' %}",
                     type: "POST",
@@ -104,14 +105,17 @@
                     success: function (data) {
                         console.log(data);
                         var msg = data.msg;
+                        var message;
                         var alt_btn = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
                         if(msg === 'not due') {
-                            var message = '<div class="alert alert-info alert-dismissible" role="alert" > ' +
+                            message = '<div class="alert alert-info alert-dismissible role="alert" > ' +
                                 alt_btn +'<strong>'+domain+'</strong> 域名未到期，暂无法更新</div>';
                             $('.ssl-wrapper').prepend(message);
+                            $('.alert').fadeOut(6000);
                         } else if(msg === 'renewed') {
                             message = '<div class="alert alert-success alert-dismissible" role="alert">' +
                                 alt_btn +' <strong>'+domain+'</strong> 域名已更新</div>';
+                            message.addClass(domain);
                             $('.ssl-wrapper').prepend(message);
                         }
                         btn.button('reset');
