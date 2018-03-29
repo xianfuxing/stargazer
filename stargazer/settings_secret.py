@@ -1,0 +1,15 @@
+# Zabbix settings
+ZAPI_URL = ''
+ZAPI_USER = ''
+ZAPI_PASSWORD = ''
+
+# Aliyun api AK/SK
+YJH_AK = ''
+YJH_SK = ''
+TBUS_AK = ''
+TBUS_SK = ''
+
+# SALT API
+SALT_URL = ''
+SALT_USER = ''
+SALT_PASSWORD = ''
