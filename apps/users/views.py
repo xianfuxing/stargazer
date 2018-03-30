@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
 from django.core.cache import cache
@@ -83,3 +83,7 @@ class MYLoginView(LoginView):
 
 class ProfileHomeView(TemplateView):
     template_name = 'users/profile_home.html'
+
+
+class ProfileUpdateView(UpdateView):
+    pass
