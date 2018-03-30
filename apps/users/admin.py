@@ -11,6 +11,9 @@ USER_FIELDS = (
 class UserAdmin(UserAdmin):
     list_display = ('username', 'email', 'position', 'is_staff')
     add_fieldsets = USER_FIELDS
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('position',)}),
+    )
 
 
 admin.site.register(User, UserAdmin)

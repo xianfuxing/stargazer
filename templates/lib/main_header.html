@@ -1,3 +1,13 @@
 {% extends 'adminlte/lib/_main_header.html' %}
 
-{% block logout_url %}{% url 'users:logout' %}{% endblock %}
+{% block menu_footer %}
+    <li class="user-footer">
+        <div class="pull-left">
+            <a href="{% url 'users:profile' %}"
+               class="btn btn-default btn-flat">Profile</a>
+        </div>
+        <div class="pull-right">
+            <a href="{% url 'users:logout' %}" class="btn btn-default btn-flat">Sign out</a>
+        </div>
+    </li>
+{% endblock %}
