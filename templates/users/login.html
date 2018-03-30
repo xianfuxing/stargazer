@@ -127,14 +127,14 @@
 
                             // non field errors display
                             if (non_field_errors) {
-                                for (var error in non_field_errors) {
-                                    (function (err) {
+                                for (var error_idx in non_field_errors) {
+                                    (function (error) {
                                         $('.login-box-body .alert-danger').fadeOut(function () {
-                                            var non_field_errors_alert = $('<p class="alert alert-danger">' + non_field_errors[err] + '</p>').hide();
+                                            var non_field_errors_alert = $('<p class="alert alert-danger">' + non_field_errors[error_idx] + '</p>').hide();
                                             $(this).replaceWith(non_field_errors_alert);
                                             $('.alert-danger').fadeIn(300);
                                         })
-                                    })(err)
+                                    })(error_idx)
                                 }
                                 $('.field-error').empty();
                             }
@@ -153,7 +153,7 @@
                                         if ({{ field }}_errors.length !== 0) {
                                             var error_wrapper = '<div class="field-error {{ field }}-error">';
                                             var errors = '';
-                                            for (err in {{ field }}_errors) {
+                                            for (var _ in {{ field }}_errors) {
                                                 errors += error_wrapper + {{ field }}_errors + '</div>';
                                             }
                                             $('.{{ field }}-error').replaceWith(errors);
