@@ -117,6 +117,8 @@
                                 alt_btn +' <strong>'+domain+'</strong> 域名已更新</div>';
                             message.addClass(domain);
                             $('.ssl-wrapper').prepend(message);
+                        } else if (mas === 'unknown error') {
+                            alert('未知错误，经检查 certbot 版本');
                         }
                         btn.button('reset');
                     },
