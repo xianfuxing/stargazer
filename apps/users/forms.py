@@ -3,7 +3,8 @@ from django import forms
 from captcha.fields import CaptchaField
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class LoginForm(AuthenticationForm):
@@ -16,8 +17,9 @@ class CaptchaLoginForm(LoginForm):
 
 
 class ProfileForm(forms.ModelForm):
-    model = User
-    fields = ['username', 'email', 'department', 'position', 'phone']
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'department', 'position', 'phone']
 
     def clean_mobile(self):
         mobile = self.cleaned_data.get('phone', '')
