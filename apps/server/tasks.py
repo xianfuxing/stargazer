@@ -39,7 +39,13 @@ def update_ecs_status():
     yjh_clt = client.AcsClient(yjh_credentials.AK, yjh_credentials.SK, 'cn-shenzhen')
     tbus_clt = client.AcsClient(tbus_credentials.AK, tbus_credentials.SK, 'cn-shenzhen')
     for host in host_list:
-        clt = yjh_clt if host.org.code == 'YJH' else tbus_clt
+        if host.org.code == 'YJH':
+            clt = yjh_clt
+        elif host.org.code == 'TBUS':
+            clt = tbus_clt
+        else:
+            # skip BIZ org
+            continue
         request.set_InstanceName(host.hostname)
         response = _send_request(request, clt)
         if response is not None:
