@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, UpdateView
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
 from django.core.cache import cache
-from .forms import LoginForm, CaptchaLoginForm
+from .forms import LoginForm, CaptchaLoginForm, ProfileForm
 
 
 class MYLoginView(LoginView):
@@ -86,4 +86,10 @@ class ProfileHomeView(TemplateView):
 
 
 class ProfileUpdateView(UpdateView):
-    pass
+    form_class = ProfileForm
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'msg': 'handles by method POST', 'success': False})
+
+    def post(self, request, *args, **kwargs):
+        pass
