@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import TemplateView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
 from django.core.cache import cache
@@ -86,8 +87,9 @@ class MYLoginView(LoginView):
         return data
 
 
-class UserProfileView(UpdateView):
+class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
     template_name = 'users/profile_home.html'
+    form_valid_message = "个人资料更新成功！"
     form_class = ProfileForm
     success_url = reverse_lazy('users:profile')
 
