@@ -17,11 +17,19 @@ class CaptchaLoginForm(LoginForm):
 
 
 class ProfileForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].label = '用户'
+        self.fields['email'].label = '邮件'
+        self.fields['department'].label = '部门'
+        self.fields['position'].label = '职位'
+        self.fields['phone'].label = '电话'
+
     class Meta:
         model = User
         fields = ['username', 'email', 'department', 'position', 'phone']
 
-    def clean_mobile(self):
+    def clean_phone(self):
         mobile = self.cleaned_data.get('phone', '')
         regex_mobile = '^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$'
         p = re.compile(regex_mobile)

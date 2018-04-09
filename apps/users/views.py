@@ -6,7 +6,12 @@ from django.views.generic import TemplateView, UpdateView
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
 from django.core.cache import cache
+from braces.views import FormValidMessageMixin
+from django.urls import reverse_lazy
+
 from .forms import LoginForm, CaptchaLoginForm, ProfileForm
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class MYLoginView(LoginView):
@@ -81,15 +86,20 @@ class MYLoginView(LoginView):
         return data
 
 
-class ProfileHomeView(TemplateView):
+class UserProfileView(UpdateView):
     template_name = 'users/profile_home.html'
-
-
-class ProfileUpdateView(UpdateView):
     form_class = ProfileForm
+    success_url = reverse_lazy('users:profile')
 
-    def get(self, request, *args, **kwargs):
-        return JsonResponse({'msg': 'handles by method POST', 'success': False})
+    def get_object(self, queryset=None):
+        return User.objects.get(pk=self.request.user.pk)
 
-    def post(self, request, *args, **kwargs):
-        pass
+
+# class ProfileUpdateView(UpdateView):
+#     form_class = ProfileForm
+#
+#     def get(self, request, *args, **kwargs):
+#         return JsonResponse({'msg': 'handles by method POST', 'success': False})
+#
+#     def post(self, request, *args, **kwargs):
+#         form = self.get_form()
