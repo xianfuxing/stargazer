@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth import login as auth_login
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.views.generic import TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.signals import user_login_failed
@@ -10,6 +10,7 @@ from django.core.cache import cache
 from braces.views import FormValidMessageMixin
 from django.urls import reverse_lazy
 
+from django.contrib.auth.forms import PasswordChangeForm
 from .forms import LoginForm, CaptchaLoginForm, ProfileForm
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -96,6 +97,11 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
     def get_object(self, queryset=None):
         return User.objects.get(pk=self.request.user.pk)
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx['pass_form'] = PasswordChangeForm(self.request.user)
+        return ctx
+
 
 # class ProfileUpdateView(UpdateView):
 #     form_class = ProfileForm
@@ -105,3 +111,34 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
 #
 #     def post(self, request, *args, **kwargs):
 #         form = self.get_form()
+
+
+class MyPasswordChangeView(LoginRequiredMixin, FormValidMessageMixin, PasswordChangeView):
+    template_name = 'users/profile_home.html'
+    success_url = reverse_lazy('users:profile')
+    form_valid_message = "密码修改成功！"
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'msg': 'need post method'})
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests: instantiate a form instance with the passed
+        POST variables and then check if it's valid.
+        """
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            field_errors = {}
+            errors = form.errors
+            for k in errors:
+                field_errors[k] = errors[k]
+            return JsonResponse({'success': False, 'field_errors': field_errors})
+
+    def get_context_data(self, **kwargs):
+        """Insert the form into the context dict."""
+        if 'form' in kwargs:
+            del kwargs['form']
+        kwargs['pass_form'] = self.get_form()
+        return super().get_context_data(**kwargs)
