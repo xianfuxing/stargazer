@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login as auth_login, update_session_auth_hash
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.views.generic import TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -113,10 +113,9 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
 #         form = self.get_form()
 
 
-class MyPasswordChangeView(LoginRequiredMixin, FormValidMessageMixin, PasswordChangeView):
+class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     template_name = 'users/profile_home.html'
     success_url = reverse_lazy('users:profile')
-    form_valid_message = "密码修改成功！"
 
     def get(self, request, *args, **kwargs):
         return JsonResponse({'msg': 'need post method'})
@@ -128,7 +127,9 @@ class MyPasswordChangeView(LoginRequiredMixin, FormValidMessageMixin, PasswordCh
         """
         form = self.get_form()
         if form.is_valid():
-            return self.form_valid(form)
+            # return self.form_valid(form)
+            self.form_valid(form)
+            return JsonResponse({'success': True, 'msg': 'password changed successfully'})
         else:
             field_errors = {}
             errors = form.errors

@@ -91,3 +91,26 @@ body {
     width: 60%;
 }
 /* end ssl button styles */
+
+
+/* start profile styles */
+.new-password1-help ul {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.new-password1-help, .new-password1-help li {
+    font-size: 11px;
+    color: #999;
+}
+
+.new-password1-help ul li {
+    list-style: none;
+    line-height: 20px;
+}
+
+.change-password .alert-new_password2 {
+    /*margin-top: 3px;*/
+}
+
+/* end profile sytles */
