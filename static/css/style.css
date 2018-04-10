@@ -109,8 +109,24 @@ body {
     line-height: 20px;
 }
 
-.change-password .alert-new_password2 {
-    /*margin-top: 3px;*/
+.change-password .alert {
+    margin-left: 15px;
+    margin-right:15px;
+}
+
+@media (min-width: 768px) {
+    .change-password .alert {
+        margin-left: 140px;
+        margin-right: 15px;
+    }
+}
+
+.change-password .alert ul {
+    padding: 0;
+}
+
+.change-password .alert li {
+    list-style: none;
 }
 
 /* end profile sytles */

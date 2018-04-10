@@ -80,12 +80,16 @@
                               method="post">
                             {% for field in pass_form %}
                                 <div class="form-group">
+                                    {% if field.name == "new_password2" %}
+                                        <div class="alert-new_password2 alert alert-danger alert-dismissible"
+                                             role="alert" style="display: none"></div>
+                                    {% endif %}
+                                    {% if field.name == "old_password" %}
+                                        <div class="alert-old_password alert alert-danger alert-dismissible"
+                                             role="alert" style="display: none"></div>
+                                    {% endif %}
                                     {{ field.label_tag }}
                                     <div class="col-sm-10">
-                                        {% if field.name == "new_password2" %}
-                                            <div class="alert-new_password2 alert alert-danger alert-dismissible"
-                                                 role="alert" style="display: none"></div>
-                                        {% endif %}
                                         {{ field.errors }}
                                         {{ field }}
                                         {% if field.name == "new_password1" %}
@@ -163,7 +167,23 @@
                             if (!jQuery.isEmptyObject(field_errors)) {
                                 for (var field in field_errors) {
                                     if (field === 'new_password2') {
-                                        $(".alert-new_password2").text(field_errors[field]).fadeIn();
+                                        var new_password2_errors = field_errors[field];
+                                        var new_password2_res = '';
+                                        for (var new_password2_error in new_password2_errors) {
+                                            new_password2_res += '<li>' + new_password2_errors[new_password2_error] + '</li>';
+                                        }
+                                        $(".alert-new_password2").fadeOut(function () {
+                                            $(this).html('<ul>' + new_password2_res + '</ul>').fadeIn();
+                                        });
+                                    } else {
+                                        var old_password_errors = field_errors[field];
+                                        var old_password_res = '';
+                                        for (var old_password_error in old_password_errors) {
+                                            old_password_res += '<li>' + old_password_errors[old_password_error] + '</li>';
+                                        }
+                                        $(".alert-old_password").fadeOut(function () {
+                                            $(this).html('<ul>' + old_password_res + '</ul>').fadeIn();
+                                        });
                                     }
                                 }
                             }
