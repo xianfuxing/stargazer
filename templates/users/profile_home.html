@@ -157,8 +157,9 @@
                     async: true,
                     success: function (data) {
                         if (data.success === true) {
+                            $("form.change-password .alert").hide();
                             var suc_alert = $('.content .alert-success');
-                            suc_alert.text('个人资料更新成功！').fadeIn();
+                            suc_alert.text('密码修改成功！').fadeIn();
                             suc_alert.fadeOut(3000);
                             $('form.change-password input[type!=hidden]').val('');
                         } else {
