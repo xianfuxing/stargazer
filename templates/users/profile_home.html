@@ -165,6 +165,12 @@
                         } else {
                             console.log(data.field_errors);
                             var field_errors = data.field_errors;
+                            if(! ('new_password2' in field_errors)) {
+                                $('.alert-new_password2').hide();
+                            }
+                            if (! ('old_password' in field_errors)) {
+                                $('.alert-old_password').hide();
+                            }
                             if (!jQuery.isEmptyObject(field_errors)) {
                                 for (var field in field_errors) {
                                     if (field === 'new_password2') {
@@ -176,7 +182,8 @@
                                         $(".alert-new_password2").fadeOut(function () {
                                             $(this).html('<ul>' + new_password2_res + '</ul>').fadeIn();
                                         });
-                                    } else {
+                                    }
+                                    if (field === 'old_password') {
                                         var old_password_errors = field_errors[field];
                                         var old_password_res = '';
                                         for (var old_password_error in old_password_errors) {
