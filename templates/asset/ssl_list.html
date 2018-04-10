@@ -108,7 +108,7 @@
                         var message;
                         var alt_btn = '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
                         if(msg === 'not due') {
-                            message = '<div class="alert alert-info alert-dismissible role="alert" > ' +
+                            message = '<div class="alert alert-info alert-dismissible" role="alert" > ' +
                                 alt_btn +'<strong>'+domain+'</strong> 域名未到期，暂无法更新</div>';
                             $('.ssl-wrapper').prepend(message);
                             $('.alert').fadeOut(6000);
