@@ -24,7 +24,7 @@ class ProfileForm(forms.ModelForm):
         self.fields['department'].label = '部门'
         self.fields['position'].label = '职位'
         self.fields['phone'].label = '电话'
-        
+
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
 
