@@ -47,3 +47,9 @@ class PasswordChangeCustomForm(PasswordChangeForm):
         super().__init__(user, *args, **kwargs)
         for field in self.fields:
             self.fields[field].widget.attrs['class'] = 'form-control'
+
+
+class MugshotForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('mugshot',)

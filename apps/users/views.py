@@ -10,7 +10,8 @@ from django.core.cache import cache
 from braces.views import FormValidMessageMixin
 from django.urls import reverse_lazy
 
-from .forms import LoginForm, CaptchaLoginForm, ProfileForm, PasswordChangeCustomForm
+from .forms import LoginForm, CaptchaLoginForm,\
+    ProfileForm, PasswordChangeCustomForm, MugshotForm
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -102,16 +103,6 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
         return ctx
 
 
-# class ProfileUpdateView(UpdateView):
-#     form_class = ProfileForm
-#
-#     def get(self, request, *args, **kwargs):
-#         return JsonResponse({'msg': 'handles by method POST', 'success': False})
-#
-#     def post(self, request, *args, **kwargs):
-#         form = self.get_form()
-
-
 class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     form_class = PasswordChangeCustomForm
     template_name = 'users/profile_home.html'
@@ -143,3 +134,13 @@ class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
             del kwargs['form']
         kwargs['pass_form'] = self.get_form()
         return super().get_context_data(**kwargs)
+
+
+class MugshotUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
+    template_name = 'users/profile_home.html'
+    form_valid_message = "头像更新成功！"
+    form_class = MugshotForm
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return User.objects.get(pk=self.request.user.pk)

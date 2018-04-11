@@ -111,7 +111,7 @@
             <!-- /.nav-tabs-custom -->
         </div>
     </div>
-    <div class="modal modal-primary fade" id="modal-primary" style="display: none;">
+    <div class="modal modal-primary fade upload" id="modal-primary" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -119,13 +119,16 @@
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">修改头像</h4>
                 </div>
-                <div class="modal-body">
-                    <input type="file" name="mugshot" required="" class="form-control" maxlength="150">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-outline">保存</button>
-                </div>
+                <form action="{% url 'users:mugshot_change' %}" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="file" name="mugshot" required="" id="id_mugshot" class="" maxlength="150">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">取消</button>
+                        <button type="submit" class="btn btn-outline">保存</button>
+                    </div>
+                    {% csrf_token %}
+                </form>
             </div>
             <!-- /.modal-content -->
         </div>
