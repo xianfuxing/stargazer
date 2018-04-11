@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.signals import user_login_failed
 from django.conf import settings
 from django.core.cache import cache
+from django.template.defaultfilters import filesizeformat
 from braces.views import FormValidMessageMixin
 from django.urls import reverse_lazy
 
@@ -141,6 +142,20 @@ class MugshotUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
     form_valid_message = "头像更新成功！"
     form_class = MugshotForm
     success_url = reverse_lazy('users:profile')
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({'msg': 'need post method'})
+
+    # def post(self, request, *args, **kwargs):
+    #     form = self.get_form()
+    #     if form.is_valid():
+    #         return self.form_valid(form)
+    #     else:
+    #         field_errors = {}
+    #         errors = form.errors
+    #         for k in errors:
+    #             field_errors[k] = errors[k]
+    #         return JsonResponse({'success': False, 'field_errors': field_errors})
 
     def get_object(self, queryset=None):
         return User.objects.get(pk=self.request.user.pk)

@@ -1,6 +1,7 @@
 import re
 from django import forms
 from captcha.fields import CaptchaField
+from django.template.defaultfilters import filesizeformat
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 from django.contrib.auth import get_user_model
@@ -53,3 +54,9 @@ class MugshotForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('mugshot',)
+
+    def clean_mugshot(self):
+        content = self.cleaned_data.get('mugshot')
+        if content.size > 1024 * 1024:
+            raise forms.ValidationError('上传的图片大小不能超过 %s。' % filesizeformat(1024 * 1024))
+        return content
