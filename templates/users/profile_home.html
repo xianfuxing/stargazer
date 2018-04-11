@@ -36,7 +36,8 @@
                             {% if request.user.email %}{{ request.user.email }}{% else %}-{% endif %}</a>
                         </li>
                     </ul>
-                    <button type="button" class="btn btn-primary btn-block">修改
+                    <button type="button" class="btn btn-primary btn-block" data-toggle="modal"
+                            data-target="#modal-primary">修改头像
                     </button>
                 </div>
             </div>
@@ -52,7 +53,8 @@
                         <form class="form-horizontal" action="{% url 'users:profile' %}" method="post">
                             {% for field in form %}
                                 <div class="form-group">
-                                    <label for="{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}:</label>
+                                    <label for="{{ field.name }}"
+                                           class="col-sm-2 control-label">{{ field.label }}:</label>
                                     <div class="col-sm-10">
                                         {{ field }}
                                         {{ field.errors }}
@@ -81,7 +83,8 @@
                                         <div class="alert-old_password alert alert-danger alert-dismissible"
                                              role="alert" style="display: none"></div>
                                     {% endif %}
-                                    <label for="{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}:</label>
+                                    <label for="{{ field.name }}"
+                                           class="col-sm-2 control-label">{{ field.label }}:</label>
                                     <div class="col-sm-10">
                                         {{ field.errors }}
                                         {{ field }}
@@ -107,6 +110,26 @@
             </div>
             <!-- /.nav-tabs-custom -->
         </div>
+    </div>
+    <div class="modal modal-primary fade" id="modal-primary" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">修改头像</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="file" name="mugshot" required="" class="form-control" maxlength="150">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-outline">保存</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
 {% endblock %}
 
@@ -135,10 +158,10 @@
                         } else {
                             console.log(data.field_errors);
                             var field_errors = data.field_errors;
-                            if(! ('new_password2' in field_errors)) {
+                            if (!('new_password2' in field_errors)) {
                                 $('.alert-new_password2').hide();
                             }
-                            if (! ('old_password' in field_errors)) {
+                            if (!('old_password' in field_errors)) {
                                 $('.alert-old_password').hide();
                             }
                             if (!jQuery.isEmptyObject(field_errors)) {
