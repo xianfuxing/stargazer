@@ -4,3 +4,4 @@ __pycache__
 .idea
 settings_secret.py
 migrations
+media
