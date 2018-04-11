@@ -1,7 +1,7 @@
 import re
 from django import forms
 from captcha.fields import CaptchaField
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -37,3 +37,10 @@ class ProfileForm(forms.ModelForm):
             return mobile
         else:
             raise forms.ValidationError('手机号不符合', code='invalid_mobile')
+
+
+class PasswordChangeCustomForm(PasswordChangeForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'

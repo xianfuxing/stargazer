@@ -116,7 +116,7 @@ body {
 
 @media (min-width: 768px) {
     .change-password .alert {
-        margin-left: 140px;
+        margin-left: 18%;
         margin-right: 15px;
     }
 }

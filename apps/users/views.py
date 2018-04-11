@@ -10,8 +10,7 @@ from django.core.cache import cache
 from braces.views import FormValidMessageMixin
 from django.urls import reverse_lazy
 
-from django.contrib.auth.forms import PasswordChangeForm
-from .forms import LoginForm, CaptchaLoginForm, ProfileForm
+from .forms import LoginForm, CaptchaLoginForm, ProfileForm, PasswordChangeCustomForm
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -99,7 +98,7 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx['pass_form'] = PasswordChangeForm(self.request.user)
+        ctx['pass_form'] = PasswordChangeCustomForm(self.request.user)
         return ctx
 
 
@@ -114,6 +113,7 @@ class UserProfileView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
 
 
 class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
+    form_class = PasswordChangeCustomForm
     template_name = 'users/profile_home.html'
     success_url = reverse_lazy('users:profile')
 

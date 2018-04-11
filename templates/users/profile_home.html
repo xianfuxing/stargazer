@@ -59,7 +59,7 @@
                         <form class="form-horizontal" action="{% url 'users:profile' %}" method="post">
                             {% for field in form %}
                                 <div class="form-group">
-                                    {{ field.label_tag }}
+                                    <label for="{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}:</label>
                                     <div class="col-sm-10">
                                         {{ field }}
                                         {{ field.errors }}
@@ -88,7 +88,7 @@
                                         <div class="alert-old_password alert alert-danger alert-dismissible"
                                              role="alert" style="display: none"></div>
                                     {% endif %}
-                                    {{ field.label_tag }}
+                                    <label for="{{ field.name }}" class="col-sm-2 control-label">{{ field.label }}:</label>
                                     <div class="col-sm-10">
                                         {{ field.errors }}
                                         {{ field }}
@@ -141,9 +141,6 @@
     {{ block.super }}
     <script>
         $(document).ready(function () {
-            $("form .form-group input[type!=hidden]").addClass('form-control');
-            $("form .form-group label").addClass('col-sm-2 control-label');
-
             $("form.change-password").on('submit', function (e) {
                 e.preventDefault();
                 $.ajaxSetup({
