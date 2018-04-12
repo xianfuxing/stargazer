@@ -1,4 +1,5 @@
 {% extends 'adminlte/lib/_main_sidebar.html' %}
+{% load adminlte_helpers %}
 {% load common_tags %}
 
 {% block nav_heading %}大盘导航{% endblock %}
@@ -64,3 +65,14 @@
     </li>
 
 {% endblock nav_links %}
+
+{% block user_panel %}
+    <div class="user-panel">
+        <div class="pull-left image">
+            <img src="{% if request.user.avatar_url %}{{ request.user.avatar_url }}{% else %}{% avatar_url size=90 %}{% endif %}" class="img-circle" alt="User Image">
+        </div>
+        <div class="pull-left info">
+            <p>{% firstof request.user.get_full_name request.user.username %}</p>
+        </div>
+    </div>
+{% endblock %}
