@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from imagekit.exceptions import MissingSource
 
 
 def avatar_path(instance, filename):
@@ -25,7 +26,11 @@ class User(AbstractUser):
         verbose_name_plural = verbose_name
 
     def avatar_url(self):
-        return self.avatar_thumbnail.url
+        try:
+            avatar_thumbnail_url = self.avatar_thumbnail.url
+        except MissingSource:
+            avatar_thumbnail_url = ''
+        return avatar_thumbnail_url
 
     def __str__(self):
         return self.username
