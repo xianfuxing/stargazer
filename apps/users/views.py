@@ -144,17 +144,14 @@ class MugshotUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
     success_url = reverse_lazy('users:profile')
 
     def get(self, request, *args, **kwargs):
-        print(MugshotUpdateView.__mro__)
         return JsonResponse({'msg': 'need post method'})
 
     def post(self, request, *args, **kwargs):
-        # get object to update if not will
-        # create one that is not expect
         self.object = self.get_object()
-        
         form = self.get_form()
         if form.is_valid():
-            return self.form_valid(form)
+            self.form_valid(form)
+            return JsonResponse({'success': True, 'msg': 'mugshot updated successfully'})
         else:
             field_errors = {}
             errors = form.errors

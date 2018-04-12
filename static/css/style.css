@@ -129,7 +129,16 @@ body {
     list-style: none;
 }
 
-.upload .modal-content input[type=file] {
+.upload-file .modal-content input[type=file] {
+}
+
+.upload-file .modal-content ul {
+    padding-left: 0;
+}
+
+.upload-file .modal-content .text-danger li{
+    list-style: none;
+    background-color: ;
 }
 
 /* end profile sytles */

@@ -111,7 +111,7 @@
             <!-- /.nav-tabs-custom -->
         </div>
     </div>
-    <div class="modal modal-primary fade upload" id="modal-primary" style="display: none;">
+    <div class="modal modal-primary fade upload-file" id="modal-primary" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -119,8 +119,9 @@
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">修改头像</h4>
                 </div>
-                <form action="{% url 'users:mugshot_change' %}" method="post" enctype="multipart/form-data">
+                <form class="change-mugshot" action="{% url 'users:mugshot_change' %}" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
+                        <div class="text-danger"></div>
                         <input type="file" name="mugshot" required="" id="id_mugshot" class="" maxlength="150">
                     </div>
                     <div class="modal-footer">
@@ -198,7 +199,41 @@
                     }
                 });
             });
+            $("form.change-mugshot").on('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                $.ajaxSetup({
+                    headers: {"X-CSRFToken": '{{ csrf_token }}'}
+                });
+                $.ajax({
+                    url: "{% url 'users:mugshot_change' %}",
+                    type: "post",
+                    data: formData,
+                    dataType: 'json',
+                    async: true,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.success === true) {
+                            window.location.href = "{% url 'users:profile' %}";
+                        }  else {
+                            var filed_errors = data.field_errors;
+                            var mugshot_errors = filed_errors['mugshot'];
+                            var mugshot_res = '';
+                            for(var mugshot_error in mugshot_errors) {
+                                mugshot_res += '<li>'+mugshot_errors[mugshot_error]+'</li>';
+                            }
+                            $('.modal-body .text-danger').fadeOut(200, function () {
+                                $(this).html('<ul>'+mugshot_res+'</ul>').fadeIn(200);
+                            });
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(errorThrown)
+                    }
+                });
+            });
         });
-
     </script>
 {% endblock %}
