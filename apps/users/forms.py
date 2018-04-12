@@ -50,13 +50,13 @@ class PasswordChangeCustomForm(PasswordChangeForm):
             self.fields[field].widget.attrs['class'] = 'form-control'
 
 
-class MugshotForm(forms.ModelForm):
+class AvatarForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ('mugshot',)
+        fields = ('avatar',)
 
-    def clean_mugshot(self):
-        content = self.cleaned_data.get('mugshot')
+    def clean_avatar(self):
+        content = self.cleaned_data.get('avatar')
         if content.size > 1024 * 1024:
             raise forms.ValidationError('上传的图片大小不能超过 %s。' % filesizeformat(1024 * 1024))
         return content

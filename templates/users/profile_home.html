@@ -119,10 +119,10 @@
                         <span aria-hidden="true">×</span></button>
                     <h4 class="modal-title">修改头像</h4>
                 </div>
-                <form class="change-mugshot" action="{% url 'users:mugshot_change' %}" method="post" enctype="multipart/form-data">
+                <form class="change-avatar" action="{% url 'users:avatar_change' %}" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="text-danger"></div>
-                        <input type="file" name="mugshot" required="" id="id_mugshot" class="" maxlength="150">
+                        <input type="file" name="avatar" required="" id="id_avatar" class="" maxlength="150">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">取消</button>
@@ -199,14 +199,14 @@
                     }
                 });
             });
-            $("form.change-mugshot").on('submit', function (e) {
+            $("form.change-avatar").on('submit', function (e) {
                 e.preventDefault();
                 var formData = new FormData($(this)[0]);
                 $.ajaxSetup({
                     headers: {"X-CSRFToken": '{{ csrf_token }}'}
                 });
                 $.ajax({
-                    url: "{% url 'users:mugshot_change' %}",
+                    url: "{% url 'users:avatar_change' %}",
                     type: "post",
                     data: formData,
                     dataType: 'json',
@@ -219,13 +219,13 @@
                             window.location.href = "{% url 'users:profile' %}";
                         }  else {
                             var filed_errors = data.field_errors;
-                            var mugshot_errors = filed_errors['mugshot'];
-                            var mugshot_res = '';
-                            for(var mugshot_error in mugshot_errors) {
-                                mugshot_res += '<li>'+mugshot_errors[mugshot_error]+'</li>';
+                            var avatar_errors = filed_errors['avatar'];
+                            var avatar_res = '';
+                            for(var avatar_error in avatar_errors) {
+                                avatar_res += '<li>'+avatar_errors[avatar_error]+'</li>';
                             }
                             $('.modal-body .text-danger').fadeOut(200, function () {
-                                $(this).html('<ul>'+mugshot_res+'</ul>').fadeIn(200);
+                                $(this).html('<ul>'+avatar_res+'</ul>').fadeIn(200);
                             });
                         }
                     },

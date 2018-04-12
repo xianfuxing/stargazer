@@ -12,7 +12,7 @@ from braces.views import FormValidMessageMixin
 from django.urls import reverse_lazy
 
 from .forms import LoginForm, CaptchaLoginForm,\
-    ProfileForm, PasswordChangeCustomForm, MugshotForm
+    ProfileForm, PasswordChangeCustomForm, AvatarForm
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
@@ -137,10 +137,10 @@ class MyPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
         return super().get_context_data(**kwargs)
 
 
-class MugshotUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
+class AvatarUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
     template_name = 'users/profile_home.html'
     form_valid_message = "头像更新成功！"
-    form_class = MugshotForm
+    form_class = AvatarForm
     success_url = reverse_lazy('users:profile')
 
     def get(self, request, *args, **kwargs):
@@ -151,7 +151,7 @@ class MugshotUpdateView(LoginRequiredMixin, FormValidMessageMixin, UpdateView):
         form = self.get_form()
         if form.is_valid():
             self.form_valid(form)
-            return JsonResponse({'success': True, 'msg': 'mugshot updated successfully'})
+            return JsonResponse({'success': True, 'msg': 'avatar updated successfully'})
         else:
             field_errors = {}
             errors = form.errors
