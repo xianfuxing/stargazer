@@ -98,10 +98,11 @@
                 $.ajax({
                     url: "{% url 'asset:renew' %}",
                     type: "POST",
-                    dataType: 'json',
-                    data: {
-                        domain: domain
-                    },
+                    contentType: 'application/json; charset=utf-8',
+                    processData: false,
+                    data: JSON.stringify({
+                        'domain': domain
+                    }),
                     success: function (data) {
                         console.log(data);
                         var msg = data.msg;

@@ -70,7 +70,8 @@ class SlsRenewView(LoginRequiredMixin, View):
         salt_username = getattr(settings_secret, 'SALT_USER', '')
         salt_password = getattr(settings_secret, 'SALT_PASSWORD', '')
         request = self.request
-        domain = request.POST.get('domain', request.GET.get('domain'))
+        data = json.loads(request.body.decode())
+        domain = data.get('domain', '')
         if domain:
             try:
                 ssl = SslCertificate.objects.get(domain=domain)
