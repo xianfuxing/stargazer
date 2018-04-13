@@ -1,13 +1,38 @@
 {% extends 'adminlte/lib/_main_header.html' %}
+{% load adminlte_helpers i18n %}
 
-{% block menu_footer %}
-    <li class="user-footer">
-        <div class="pull-left">
-            <a href="{% url 'users:profile' %}"
-               class="btn btn-default btn-flat">Profile</a>
-        </div>
-        <div class="pull-right">
-            <a href="{% url 'users:logout' %}" class="btn btn-default btn-flat">Sign out</a>
-        </div>
-    </li>
-{% endblock %}
+{% block header_dropdowns %}
+    {% if request.user.is_authenticated %}
+        <li class="dropdown user user-menu">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <img src="{% if request.user.avatar_url %}{{ request.user.avatar_url }}{% else %}{% avatar_url size=50 %}{% endif %}" class="user-image" alt="User Image">
+                <span class="hidden-xs">{% firstof request.user.get_short_name request.user.get_username %}</span>
+            </a>
+            <ul class="dropdown-menu">
+                {% block user_header %}
+                    <li class="user-header">
+                        <img src="{% if request.user.avatar_url %}{{ request.user.avatar_url }}{% else %}{% avatar_url size=80 %}{% endif %}" class="img-circle" alt="User Image">
+                        <p>
+                            {% firstof request.user.get_short_name request.user.get_username %}
+                            <small>Member since {{ request.user.date_joined }}</small>
+                        </p>
+                    </li>
+                {% endblock %}
+
+                <!-- Menu Footer-->
+                {% block menu_footer %}
+                    <li class="user-footer">
+                        <div class="pull-left">
+                            <a href="{% url 'users:profile' %}"
+                               class="btn btn-default btn-flat">Profile</a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="{% url 'users:logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                        </div>
+                    </li>
+                {% endblock %}
+
+            </ul>
+        </li>
+    {% endif %}
+{% endblock header_dropdowns %}
