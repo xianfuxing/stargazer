@@ -126,7 +126,7 @@
                         <input type="file" name="avatar" required="" id="id_avatar" class="" maxlength="150">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-outline pull-left cancel-upload-file" data-dismiss="modal">取消</button>
                         <button type="submit" class="btn btn-outline">保存</button>
                     </div>
                     {% csrf_token %}
@@ -235,6 +235,9 @@
                     }
                 });
             });
+            $("button.cancel-upload-file").click(function () {
+                $("#id_avatar").val('');
+            })
         });
     </script>
 {% endblock %}
