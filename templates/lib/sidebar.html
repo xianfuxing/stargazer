@@ -9,10 +9,11 @@
         <a href="{% url 'dashboard' %}">
             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
             <span class="pull-right-container">
-                {% get_server_status_count as status_count %}
+                {% get_abnormal_server_count as ab_server_count %}
                 {% get_trigger_count request as trigger_count %}
-                {% if status_count > 0 or trigger_count > 0 %}
-                    <small class="label pull-right bg-yellow">{{ trigger_count|my_add:status_count }}</small>
+                {% get_abnormal_ssl_count as ab_ssl_count %}
+                {% if ab_server_count > 0 or trigger_count > 0 or ab_ssl_count > 0 %}
+                    <small class="label pull-right bg-yellow">{{ trigger_count|add:ab_server_count|add:ab_ssl_count }}</small>
                 {% endif %}
             </span>
         </a>

@@ -7,7 +7,7 @@
 
 {% block content %}
     <div class="row">
-        {% get_server_status_count as status_count %}
+        {% get_abnormal_server_count as ab_server_count %}
         {% get_trigger_count request as trigger_count %}
         {% get_abnormal_ssl_count as ab_ssl_count %}
         <div class="col-lg-3 col-xs-6">
@@ -25,9 +25,9 @@
 
         </div>
         <div class="col-lg-3 col-xs-6">
-            <div class="small-box {% if status_count > 0 %}bg-yellow{% else %}bg-aqua{% endif %}">
+            <div class="small-box {% if ab_server_count > 0 %}bg-yellow{% else %}bg-aqua{% endif %}">
                 <div class="inner">
-                    <h3>{{ status_count }}</h3>
+                    <h3>{{ ab_server_count }}</h3>
                     <p>服务器状态</p>
                 </div>
                 <div class="icon">

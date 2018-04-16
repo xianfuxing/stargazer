@@ -70,7 +70,7 @@ def is_active_reverse(request, args, *urlnames):
 
 
 @register.simple_tag()
-def get_server_status_count():
+def get_abnormal_server_count():
     # Get result from cache if exist
     issue_count = cache.get('issue_count')
     if issue_count:
@@ -121,11 +121,6 @@ def get_abnormal_ssl_count():
         if ssl.will_be_expired or ssl.is_expired:
             ab_ssl_count += 1
     return ab_ssl_count
-
-
-@register.filter(name='my_add')
-def my_add(value1, value2):
-    return value1 + value2
 
 
 @register.filter(name='make_list2')
