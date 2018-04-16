@@ -7,7 +7,8 @@ class ZapiMixin(object):
     """
      Mixin for return zapi
     """
-    def get_zapi(self):
+    @staticmethod
+    def get_zapi():
         # Get zapi cache if exist
         zapi = cache.get('zapi')
         if zapi:
