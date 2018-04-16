@@ -174,3 +174,6 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/1'),
     },
 }
+
+# session will expire after 60 minutes.
+SESSION_COOKIE_AGE = 60 * 120
