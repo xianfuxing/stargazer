@@ -8,7 +8,7 @@ from .mixins.zapi import ZapiMixin
 
 
 class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
-    def get(self, request, host_name):
+    def get(self, request, host_name, *args, **kwargs):
         host_reps = self.get_host(host_name)
         return JsonResponse(host_reps)
 
@@ -26,7 +26,8 @@ class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
 
 
 class ItemDetailView(HostDetailView):
-    def get(self, request, host_name, item_type, item_key):
+    def get(self, request, host_name, *args, **kwargs):
+        item_type, item_key = kwargs['item_type'], kwargs['item_key']
         item_resp = self.get_item(host_name, item_type, item_key)
 
         return JsonResponse(item_resp)
@@ -63,7 +64,8 @@ class ItemDetailView(HostDetailView):
 
 
 class HistoryDetailView(ItemDetailView):
-    def get(self, request, host_name, item_type, item_key):
+    def get(self, request, host_name, *args, **kwargs):
+        item_type, item_key = kwargs['item_type'], kwargs['item_key']
         item_resp = self.get_item(host_name, item_type, item_key)
         if item_resp.get('itemid', '') == '':
             return JsonResponse({'clock': '', 'value': ''})
@@ -101,7 +103,7 @@ class HistoryDetailView(ItemDetailView):
 
 
 class TriggerListView(HostDetailView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         trigger_resp = {}
         zapi = self.get_zapi()
         trigger_list = zapi.trigger.get(filter={'value': 1}, output=['triggerid', 'description', 'value', 'lastchange'])
