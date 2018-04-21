@@ -26,7 +26,6 @@ class SslListView(LoginRequiredMixin, PaginationMixin, ListView):
     object = SslCertificate
 
     def get(self, request, *args, **kwargs):
-        request = self.request
         try:
             return super().get(request, *args, **kwargs)
         except Http404:

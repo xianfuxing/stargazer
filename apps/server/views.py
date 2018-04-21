@@ -33,7 +33,6 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
     object = Host
 
     def get(self, request, *args, **kwargs):
-        request = self.request
         try:
             return super().get(request, *args, **kwargs)
         except Http404:
