@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import JsonResponse, Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import View, TemplateView, ListView, DetailView
 from pure_pagination.mixins import PaginationMixin
+from haystack.query import SearchQuerySet
+from django.core import serializers
 
 from .mixins.page_cache import CacheMixin
 from .models import Host, Org
@@ -29,7 +31,7 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
     context_object_name = 'hosts'
     template_name = 'server/host_list.html'
 
-    paginate_by = 5
+    paginate_by = 8
     object = Host
 
     def get(self, request, *args, **kwargs):
@@ -89,5 +91,13 @@ class ServerDetailView(LoginRequiredMixin, DetailView):
         return ctx
 
 
-def index(request):
-    return render(request, 'server/index.html')
+class ServerSearchView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('q', '')
+        if query:
+            results = SearchQuerySet().models(Host).filter(content=query).load_all()
+            host_queryset = [result.object for result in results]
+            host_list = serializers.serialize('json', host_queryset)
+            return JsonResponse({'results': host_list, 'msg': 'success'})
+        else:
+            return JsonResponse({'results': [], 'msg': 'Please enter keyword'})

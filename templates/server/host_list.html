@@ -18,9 +18,9 @@
         <div class="col-md-11">
             <p>总共：{{ host_count }}台服务器</p>
             <div class="col-md-4 search">
-                <form action="#" method="get" class="">
+                <form action="{% url 'server:search' %}" method="get" class="">
                     <div class="input-group input-group-sm">
-                        <input type="text" class="form-control" placeholder="搜索">
+                        <input type="search" name="q" required class="form-control" placeholder="搜索">
                         <span class="input-group-btn">
                       <button type="submit" class="btn btn-info btn-flat">Go!</button>
                     </span>

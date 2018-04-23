@@ -1,0 +1,2 @@
+{{ object.hostname }}
+{{ object.ip }}

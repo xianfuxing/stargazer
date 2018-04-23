@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'chatbot',
     'captcha',
     'django_celery_results',
+    'haystack',
 ]
 MIDDLEWARE = [
     'apps.stats_middleware.StatsMiddleware',
@@ -177,3 +178,14 @@ CELERY_BEAT_SCHEDULE = {
 
 # session will expire after 60 minutes.
 SESSION_COOKIE_AGE = 60 * 120
+
+# haystack settings
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
