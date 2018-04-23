@@ -18,9 +18,9 @@
         <div class="col-md-11">
             <p>总共：{{ host_count }}台服务器</p>
             <div class="col-md-4 search">
-                <form action="{% url 'server:search' %}" method="get" class="">
+                <form action="{% url 'server:list' %}" method="get" class="search">
                     <div class="input-group input-group-sm">
-                        <input type="search" name="q" required class="form-control" placeholder="搜索">
+                        <input type="search" name="q" class="form-control" value="{% if query %}{{ query }}{% endif %}" placeholder="实例名或 ip">
                         <span class="input-group-btn">
                       <button type="submit" class="btn btn-info btn-flat">Go!</button>
                     </span>
@@ -85,3 +85,55 @@
         </div>
     </div>
 {% endblock %}
+
+{#{% block javascript %}#}
+{#    {{ block.super }}#}
+{#    <script>#}
+{#        $(document).ready(function () {#}
+{#            $("form.search").on('submit', function (e) {#}
+{#                e.preventDefault();#}
+{#                var query = $('input[type=search]').val();#}
+{#                $.ajax({#}
+{#                    url: "{% url 'server:search' %}?q="+query,#}
+{#                    type: 'get',#}
+{#                    dataType: 'json',#}
+{#                    async: true,#}
+{#                    success: function (data) {#}
+{#                        if (data.success === true) {#}
+{#                            var results = jQuery.parseJSON(data.results);#}
+{#                            var hostname ='';#}
+{#                            var ip ='';#}
+{#                            var org ='';#}
+{#                            var status ='';#}
+{#                            var pay_method ='';#}
+{#                            var expiry_date = '';#}
+{#                            var entry ='';#}
+{#                            var content = '';#}
+{#                            for (var idx in results) {#}
+{#                                if(results.hasOwnProperty(idx)) {#}
+{#                                    var fields = results[idx].fields;#}
+{#                                }#}
+{#                                console.log(fields);#}
+{#                                hostname = '<td class="hostname"><a href="/server/detail/'+fields.id+'">'+fields.hostname+'</a></td>';#}
+{#                                ip = '<td>'+fields.ip+'</td>';#}
+{#                                org = '<td>'+fields.org+'</td>';#}
+{#                                status = '<td>'+fields.status+'</td>';#}
+{#                                pay_method = '<td>'+fields.pay_method+'</td>';#}
+{#                                expiry_date = '<td>'+fields.expiration_date+'</td>';#}
+{#                                entry = hostname + ip + org + status + pay_method + expiry_date;#}
+{#                                content += '<tr>'+entry+'</tr>';#}
+{#                            }#}
+{#                            console.log(content);#}
+{#                            $('table tbody').replaceWith('<tbody>'+content+'</tbody>');#}
+{#                        } else {#}
+{#                            alert(data.msg)#}
+{#                        }#}
+{#                    },#}
+{#                    error: function (jqXHR, textStatus, errorThrown) {#}
+{#                        alert(errorThrown);#}
+{#                    }#}
+{#                })#}
+{#            })#}
+{#        });#}
+{#    </script>#}
+{#{% endblock %}#}

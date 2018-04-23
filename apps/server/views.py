@@ -54,6 +54,7 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
         status = self.request.GET.get('status', '')
         org = self.request.GET.get('org', '')
         due = self.request.GET.get('due', '')
+        query = self.request.GET.get('q', '')
         if org:
             query_set = query_set.filter(org=org)
 
@@ -67,7 +68,11 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
             if query_set:
                 query_set = Host.is_expired_objects.all()
         else:
-            return query_set.order_by('hostname')
+            query_set.order_by('hostname')
+
+        if query:
+            results = SearchQuerySet().models(Host).filter(content=query).load_all()
+            query_set = [result.object for result in results]
 
         return query_set
 
@@ -75,6 +80,7 @@ class ServerListView(LoginRequiredMixin, PaginationMixin, ListView):
         ctx = super().get_context_data(**kwargs)
         host_count = Host.objects.all().count()
         ctx['host_count'] = host_count
+        ctx['query'] = self.request.GET.get('q', '')
 
         return ctx
 
@@ -98,6 +104,6 @@ class ServerSearchView(LoginRequiredMixin, View):
             results = SearchQuerySet().models(Host).filter(content=query).load_all()
             host_queryset = [result.object for result in results]
             host_list = serializers.serialize('json', host_queryset)
-            return JsonResponse({'results': host_list, 'msg': 'success'})
+            return JsonResponse({'results': host_list, 'success': True})
         else:
-            return JsonResponse({'results': [], 'msg': 'Please enter keyword'})
+            return JsonResponse({'results': [], 'msg': 'Please enter keyword', 'success': False})
