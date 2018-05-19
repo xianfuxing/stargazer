@@ -46,7 +46,7 @@
         var option = {
             title: {
                 text: '磁盘使用率',
-                subtext: '/weblogic Total: ' + total_disk,
+                subtext: '{{ host.hardware.disk_name }} Total: ' + total_disk,
                 x: 'center'
             },
             tooltip: {

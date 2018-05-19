@@ -49,6 +49,7 @@ class HostHardware(models.Model):
     specific = models.CharField(max_length=20, verbose_name='规格族')
     cpu = models.PositiveIntegerField(verbose_name='处理器', validators=[MinValueValidator(1, message='最小为1')])
     memory = models.PositiveIntegerField(verbose_name='内存', validators=[MinValueValidator(1, message='最小为1')])
+    disk_name = models.CharField(max_length=20, default='/', verbose_name='磁盘名称')
 
     class Meta:
         verbose_name = '配置'
