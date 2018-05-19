@@ -50,7 +50,7 @@ class ItemDetailView(HostDetailView):
         }
 
         if host.platform.lower() == 'windows':
-            item_type_map.update({'cpu': 'system.cpu.load[percpu,avg1]'})
+            item_type_map.update({'cpu': 'perf_counter[\Processor(_Total)\% Idle Time]'})
 
         zapi = self.get_zapi()
         host_reps = self.get_host(host_name)
@@ -109,8 +109,8 @@ class HistoryDetailView(ItemDetailView):
                 time = dt.strftime('%Y/%m/%d %H:%M:%S')
                 value = round(100 - float(item['value']), 2)
                 # for windows server
-                if host.platform.lower() == 'windows':
-                    value = round(float(item['value']), 2)
+                # if host.platform.lower() == 'windows':
+                #     value = round(float(item['value']), 2)
                 _history_resp.append((time, value))
             _history_resp = OrderedDict(_history_resp)
             data = [{'name': time, 'value': [time, value]} for time, value in _history_resp.items()]
