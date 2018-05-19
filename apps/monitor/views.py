@@ -3,6 +3,7 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, TemplateView
+from server.models import Host
 
 from .mixins.zapi import ZapiMixin
 
@@ -33,9 +34,14 @@ class ItemDetailView(HostDetailView):
         return JsonResponse(item_resp)
 
     def get_item(self, host_name, item_type, item_key):
+        try:
+            host = Host.objects.get(hostname=host_name)
+        except Host.DoesNotExist:
+            return {'msg': 'host is not exist'}
+
         item_type_map = {
             "cpu": "system.cpu.util[,{0}]",
-            "disk": "vfs.fs.size[/weblogic,{0}]"
+            "disk": "vfs.fs.size[{0}".format(host.disk_name)+",{0}]"
         }
         zapi = self.get_zapi()
         host_reps = self.get_host(host_name)
