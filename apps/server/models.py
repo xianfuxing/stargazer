@@ -92,6 +92,7 @@ class Host(models.Model):
     org = models.ForeignKey(Org, verbose_name='所在组织', on_delete='PROTECT')
     region = models.CharField(max_length=10, default='华南', verbose_name='所在可用区')
     hardware = models.ForeignKey(HostHardware, verbose_name='硬件配置', default=1, on_delete='PROTECT')
+    disk_name = models.CharField(max_length=20, default='/', verbose_name='磁盘名称')
     provider = models.CharField(default='阿里云', max_length=50, verbose_name='服务商')
     platform = models.CharField(default='Linux', max_length=50, verbose_name='平台')
     pay_method = models.CharField(max_length=10, default='reserved', choices=PAY_CHOICES, verbose_name='付费方式')
