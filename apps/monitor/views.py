@@ -25,6 +25,15 @@ class HostDetailView(LoginRequiredMixin, ZapiMixin, View):
             host_resp = {'hostid': '', 'name': ''}
         return host_resp
 
+    @staticmethod
+    def get_host_object(host_name):
+        try:
+            host = Host.objects.get(hostname=host_name)
+        except Host.DoesNotExist:
+            return {'msg': 'host is not exist'}
+
+        return host
+
 
 class ItemDetailView(HostDetailView):
     def get(self, request, host_name, *args, **kwargs):
@@ -34,15 +43,15 @@ class ItemDetailView(HostDetailView):
         return JsonResponse(item_resp)
 
     def get_item(self, host_name, item_type, item_key):
-        try:
-            host = Host.objects.get(hostname=host_name)
-        except Host.DoesNotExist:
-            return {'msg': 'host is not exist'}
-
+        host = self.get_host_object(host_name)
         item_type_map = {
             "cpu": "system.cpu.util[,{0}]",
             "disk": "vfs.fs.size[{0}".format(host.disk_name)+",{0}]"
         }
+
+        if host.platform.lower() == 'windows':
+            item_type_map.update({'cpu': 'system.cpu.load[percpu,avg1]'})
+
         zapi = self.get_zapi()
         host_reps = self.get_host(host_name)
         if not host_reps['hostid']:
@@ -71,6 +80,7 @@ class ItemDetailView(HostDetailView):
 
 class HistoryDetailView(ItemDetailView):
     def get(self, request, host_name, *args, **kwargs):
+        host = self.get_host_object(host_name)
         item_type, item_key = kwargs['item_type'], kwargs['item_key']
         item_resp = self.get_item(host_name, item_type, item_key)
         if item_resp.get('itemid', '') == '':
@@ -98,6 +108,9 @@ class HistoryDetailView(ItemDetailView):
                 dt = datetime.datetime.fromtimestamp(float(item['clock']))
                 time = dt.strftime('%Y/%m/%d %H:%M:%S')
                 value = round(100 - float(item['value']), 2)
+                # for windows server
+                if host.platform.lower() == 'windows':
+                    value = round(float(item['value']), 2)
                 _history_resp.append((time, value))
             _history_resp = OrderedDict(_history_resp)
             data = [{'name': time, 'value': [time, value]} for time, value in _history_resp.items()]
