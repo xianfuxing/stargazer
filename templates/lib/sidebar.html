@@ -70,7 +70,7 @@
 {% block user_panel %}
     <div class="user-panel">
         <div class="pull-left image">
-            <img src="{% if request.user.avatar_url %}{{ request.user.avatar_url }}{% else %}{% avatar_url size=90 %}{% endif %}" class="img-circle" alt="User Image">
+            <img src="{% if request.user.avatar %}{{ request.user.avatar_url }}{% else %}{% avatar_url size=90 %}{% endif %}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
             <p>{% firstof request.user.get_full_name request.user.username %}</p>
