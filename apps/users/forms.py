@@ -35,12 +35,13 @@ class ProfileForm(forms.ModelForm):
 
     def clean_phone(self):
         mobile = self.cleaned_data.get('phone', '')
-        regex_mobile = '^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$'
-        p = re.compile(regex_mobile)
-        if p.match(mobile):
-            return mobile
-        else:
-            raise forms.ValidationError('手机号不符合', code='invalid_mobile')
+        if mobile:
+            regex_mobile = '^(13[0-9]|14[579]|15[0-3,5-9]|16[6]|17[0135678]|18[0-9]|19[89])\d{8}$'
+            p = re.compile(regex_mobile)
+            if p.match(mobile):
+                return mobile
+            else:
+                raise forms.ValidationError('手机号不符合', code='invalid_mobile')
 
 
 class PasswordChangeCustomForm(PasswordChangeForm):
